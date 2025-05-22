@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Venta</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/ventas.css') }}">
+</head>
+<body>
+    <main class="main-container">
+        <h1 class="page-title">Editar Venta</h1>
+
+        <form method="POST">
+            <label for="Id_Paciente">Paciente:</label>
+            <input type="text" name="Id_Paciente" value="{{ venta.Id_Paciente }}" required><br>
+
+            <label for="graduacion_ojo_derecho">Graduación ojo derecho</label>
+            <input type="text" name="graduacion_ojo_derecho" value="{{ venta.graduacion_ojo_derecho }}" required><br>
+            
+            <label for="graduacion_ojo_izquierdo">Graduación ojo izquierdo</label>
+            <input type="text" name="graduacion_ojo_izquierdo" value="{{ venta.graduacion_ojo_izquierdo }}" required><br>
+
+            <label for="Armason">Armazón:</label>
+            <input type="text" name="Armason" value="{{ venta.Armason }}" required><br>
+
+            <label for="Tratamiento">Tratamiento:</label>
+            <input type="text" name="Tratamiento" value="{{ venta.Tratamiento }}" required><br>
+
+            <label for="Anticipo">Anticipo:</label>
+            <input type="number" name="Anticipo" value="{{ venta.Anticipo }}" required><br>
+
+            <label for="Adeudo">Adeudo:</label>
+            <input type="number" name="Adeudo" value="{{ venta.Adeudo }}" required><br>
+
+            <label for="Fecha">Fecha:</label>
+            <input type="date" name="Fecha" value="{{ venta.Fecha }}" required><br>
+
+            <button type="submit">Guardar Cambios</button>
+        </form>
+
+        <a href="{{ url_for('verinformacion.ver_ventas') }}">Regresar a la lista de ventas</a>
+    </main>
+</body>
+</html>

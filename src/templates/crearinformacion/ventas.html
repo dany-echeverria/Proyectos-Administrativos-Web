@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Venta</title>
+    <script>
+        function filtrarPacientes() {
+        let input = document.getElementById("buscar_paciente").value.toLowerCase();
+        let opciones = document.getElementById("Id_Paciente").options;
+        
+        for (let i = 0; i < opciones.length; i++) {
+            let texto = opciones[i].text.toLowerCase(); // Aquí estamos buscando en ID y nombre
+
+            // Filtramos las opciones basadas en el ID o el nombre
+            if (texto.includes(input)) {
+                opciones[i].style.display = "";  // Mostrar opción si el texto coincide
+            } else {
+                opciones[i].style.display = "none";  // Ocultar opción si el texto no coincide
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <h2>Ingresar Venta</h2>
+    <form method="POST">
+        <label>Buscar Paciente:</label>
+        <input type="text" id="buscar_paciente" onkeyup="filtrarPacientes()" placeholder="Escriba para buscar...">
+        <br>
+
+        <label>Id Paciente:</label>
+<select name="Id_Paciente" id="Id_Paciente" required>
+    <option value="" disabled selected>Seleccione un paciente</option>
+    {% for paciente in pacientes %}
+    <option value="{{ paciente.Id_Paciente }}">
+        {{ paciente.Id_Paciente }} - {{ paciente.Nombre_Pa }} {{ paciente.Apellidos }}
+    </option>
+    
+    {% endfor %}
+</select>
+        <br>
+
+        <label>Graduación ojo derecho</label>
+        <input type="text" name="graduacion_ojo_derecho" id="graduacion_ojo_derecho" required><br>
+
+        <label>Graduación ojo izquierdo</label>
+        <input type="text" name="graduacion_ojo_izquierdo" id="graduacion_ojo_izquierdo" required><br>
+
+
+        <label>Armazón:</label>
+        <input type="text" name="Armason" id="Armason" required><br>
+
+        <label>Tratamiento:</label>
+        <input type="text" name="Tratamiento" id="Tratamiento" required><br>
+
+        <label>Anticipo:</label>
+        <input type="number" step="0.01" name="Anticipo" id="Anticipo" required><br>
+
+        <label>Adeudo:</label>
+        <input type="number" step="0.01" name="Adeudo" id="Adeudo" required><br>
+
+        <label>Fecha:</label>
+        <input type="date" name="Fecha" id="Fecha" required><br>
+
+        <button type="submit">Guardar</button>
+    </form>
+    <a href="{{ url_for('verinformacion.ver_ventas') }}">Regresar</a>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Remesa</title>
+</head>
+<body>
+    <h1>Editar Remesa</h1>
+    <form method="POST">
+        <label for="Id_Proveedor">Id Proveedor:</label>
+        <input type="text" name="Id_Proveedor" value="{{ remesa.id }}"><br><br>
+
+        <label for="Codigo_Elemento">Código Elemento:</label>
+        <input type="text" name="Codigo_Elemento" value="{{ remesa.Proveedor }}"><br><br>
+
+        <label for="Modelo">Modelo:</label>
+        <input type="text" name="Modelo" value="{{ remesa.Modelo }}"><br><br>
+
+        <label for="Nombre">Nombre:</label>
+        <input type="text" name="Nombre" value="{{ remesa.Nombre }}"><br><br>
+
+        <label for="Num_Entradas">Número de Entradas:</label>
+        <input type="text" name="Num_Entradas" value="{{ remesa.Num_Entradas }}"><br><br>
+
+        <label for="Factura">Factura:</label>
+        <input type="text" name="Factura" value="{{ remesa.Factura }}"><br><br>
+
+        <label for="Fecha">Fecha:</label>
+        <input type="date" name="Fecha" value="{{ remesa.Fecha }}"><br><br>
+
+        <button type="submit">Actualizar Remesa</button>
+
+        <a href="{{ url_for('verinformacion.ver_remesas') }}">Regresar</a>
+    </form>
+</body>
+</html>

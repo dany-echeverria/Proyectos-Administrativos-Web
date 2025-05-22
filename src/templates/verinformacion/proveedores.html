@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proveedores</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/proveedores.css') }}">
+</head>
+<body>
+    <div class="task-bar"></div>
+
+    <main class="main-container">
+        <h1 class="page-title">Tabla de Proveedores</h1>
+
+        <div class="input-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Buscar...">
+            <div class="button-container">
+                <button class="square-button actualizar">Actualizar</button>
+                <a href="{{ url_for('create.agregar_proveedor') }}">
+                    <button>Agregar Proveedor</button>
+                </a>
+                <button class="square-button borrar">Borrar</button>
+                <div class="pagination">
+                    <button class="square-button" id="btnAtras" {% if page == 1 %}disabled{% endif %}>← Atrás</button>
+                    <button class="square-button" id="btnAdelante" {% if page >= total_pages %}disabled{% endif %}>Adelante →</button>
+                </div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Seleccionar</th>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Código Producto</th>
+                </tr>
+            </thead>
+            <tbody id="proveedoresTableBody">
+                {% for proveedor in datos %}
+                    <tr>
+                        <td><input type="radio" name="selectRow" class="selectRow" data-id="{{ proveedor.Id_Proveedor }}"></td>
+                        <td>{{ proveedor.Id_Proveedor }}</td>
+                        <td>{{ proveedor.Nombre_Prov }}</td>
+                        <td>{{ proveedor.Correo }}</td>
+                        <td>{{ proveedor.Dirección }}</td>
+                        <td>{{ proveedor.Teléfono }}</td>
+                        <td>{{ proveedor.Código_Prod }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7">No hay proveedores disponibles.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+
+    <a href="{{ url_for('bienvenida') }}">Regresar</a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let selectedRow = null;
+
+            let currentPage = parseInt("{{ page }}");
+            let totalPages = parseInt("{{ total_pages }}");
+
+            document.getElementById("btnAtras").addEventListener("click", function() {
+                if (currentPage > 1) {
+                    window.location.href = `/ver/proveedores?page=${currentPage - 1}`;
+
+                    
+                }
+            });
+
+            document.getElementById("btnAdelante").addEventListener("click", function() {
+                if (currentPage < totalPages) {
+                    window.location.href = `/ver/proveedores?page=${currentPage + 1}`;
+
+                }
+            });
+
+            document.querySelectorAll(".selectRow").forEach(radio => {
+                radio.addEventListener("change", function() {
+                    if (selectedRow) {
+                        selectedRow.classList.remove("selected");
+                    }
+                    selectedRow = this.closest("tr");
+                    selectedRow.classList.add("selected");
+                });
+            });
+
+            document.querySelector(".square-button.actualizar").addEventListener("click", function() {
+                const seleccionado = document.querySelector(".selectRow:checked");
+                if (seleccionado) {
+                    const idProveedor = seleccionado.dataset.id;
+                    window.location.href = `/actualizar/editar_proveedor/${idProveedor}`;
+                } else {
+                    alert("Selecciona un proveedor para actualizar.");
+                }
+            });
+
+            document.querySelector(".square-button.borrar").addEventListener("click", function() {
+                const seleccionado = document.querySelector(".selectRow:checked");
+                if (seleccionado) {
+                    const idProveedor = seleccionado.dataset.id;  
+                    if (confirm("¿Seguro que quieres eliminar este proveedor?")) {
+                        fetch(`/eliminar/borrar_proveedor/${idProveedor}`, { method: 'DELETE' })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert("Proveedor eliminado con éxito.");
+                                    seleccionado.closest("tr").remove();
+                                } else {
+                                    alert("Error al eliminar el proveedor.");
+                                }
+                            })
+                            .catch(error => console.error("Error:", error));
+                    }
+                } else {
+                    alert("Selecciona un proveedor para borrar.");
+                }
+            });
+
+            // Filtro de búsqueda en la tabla
+            document.querySelector("#searchInput").addEventListener("input", function(event) {
+                const searchTerm = event.target.value.toLowerCase();
+                const rows = document.querySelectorAll("#proveedoresTableBody tr");
+
+                rows.forEach(row => {
+                    const columns = row.querySelectorAll("td");
+                    let match = false;
+
+                    columns.forEach(column => {
+                        if (column.textContent.toLowerCase().includes(searchTerm)) {
+                            match = true;
+                        }
+                    });
+
+                    if (match) {
+                        row.style.display = "";  // Mostrar la fila
+                    } else {
+                        row.style.display = "none";  // Ocultar la fila
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

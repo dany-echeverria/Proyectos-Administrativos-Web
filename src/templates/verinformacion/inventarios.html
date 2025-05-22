@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventarios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/proveedores.css') }}">
+</head>
+<body>
+    <div class="task-bar"></div>
+
+    <main class="main-container">
+        <h1 class="page-title">Tabla de Inventarios</h1>
+        <div class="input-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Buscar...">
+            <div class="button-container">
+                <button class="square-button actualizar">Actualizar</button>
+                <a href="{{ url_for('create.agregar_inventario') }}">
+                    <button>Agregar Inventario</button>
+                </a>
+                <button class="square-button borrar">Borrar</button>
+                <div class="pagination">
+                    <button class="square-button" id="btnAtras" {% if page == 1 %}disabled{% endif %}>← Atrás</button>
+                    <button class="square-button" id="btnAdelante" {% if page >= total_pages %}disabled{% endif %}>Adelante →</button>
+                </div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Seleccionar</th>
+                    <th>Código Producto</th>
+                    <th>Id del Proveedor</th>
+                    <th>Nombre Producto</th>
+                    <th>Precio</th>
+                    <th>Modelo</th>
+                    <th>Cantidad</th>
+                    <th>Materiales</th>
+                </tr>
+            </thead>
+            <tbody id="inventariosTableBody">
+                {% for inventario in datos %}
+                    <tr>
+                        <td><input type="radio" name="selectRow" class="selectRow" data-codigo="{{ inventario.Código_Prod }}"></td>
+                        <td>{{ inventario.Código_Prod }}</td>
+                        <td>{{ inventario.Id_Proveedor }}</td>
+                        <td>{{ inventario.Nombre_Prod }}</td>
+                        <td>{{ inventario.Precio }}</td>
+                        <td>{{ inventario.Modelo }}</td>
+                        <td>{{ inventario.Cantidad }}</td>
+                        <td>{{ inventario.Materiales }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8">No hay inventarios disponibles.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+
+    <a href="{{ url_for('bienvenida') }}">Regresar</a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let selectedRow = null;
+            let currentPage = parseInt("{{ page }}");
+            let totalPages = parseInt("{{ total_pages }}");
+
+            document.getElementById("btnAtras").addEventListener("click", function() {
+                if (currentPage > 1) {
+                    window.location.href = `/ver/inventarios?page=${currentPage - 1}`;
+                }
+            });
+
+            document.getElementById("btnAdelante").addEventListener("click", function() {
+                if (currentPage < totalPages) {
+                    window.location.href = `/ver/inventarios?page=${currentPage + 1}`;
+                }
+            });
+
+            document.querySelectorAll(".selectRow").forEach(radio => {
+                radio.addEventListener("change", function() {
+                    if (selectedRow) {
+                        selectedRow.classList.remove("selected");
+                    }
+                    selectedRow = this.closest("tr");
+                    selectedRow.classList.add("selected");
+                });
+            });
+
+            document.querySelector(".square-button.actualizar").addEventListener("click", function() {
+                const seleccionado = document.querySelector(".selectRow:checked");
+                if (seleccionado) {
+                    const codigoProd = seleccionado.dataset.codigo;
+                    window.location.href = `/actualizar/editar_producto/${codigoProd}`;
+                } else {
+                    alert("Selecciona un producto para actualizar.");
+                }
+            });
+
+            document.querySelector(".square-button.borrar").addEventListener("click", function() {
+                const seleccionado = document.querySelector(".selectRow:checked");
+                if (seleccionado) {
+                    const codigoProd = seleccionado.dataset.codigo;
+                    if (confirm("¿Seguro que quieres eliminar este producto?")) {
+                        fetch(`/eliminar/borrar_producto/${codigoProd}`, { method: 'DELETE' })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert("Producto eliminado con éxito.");
+                                    seleccionado.closest("tr").remove();
+                                } else {
+                                    alert("Error al eliminar el producto.");
+                                }
+                            })
+                            .catch(error => console.error("Error:", error));
+                    }
+                } else {
+                    alert("Selecciona un producto para borrar.");
+                }
+            });
+
+            document.querySelector("#searchInput").addEventListener("input", function(event) {
+                const searchTerm = event.target.value.toLowerCase();
+                const rows = document.querySelectorAll("#inventariosTableBody tr");
+
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(searchTerm) ? "" : "none";
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacientes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/paciente.css') }}">
+</head>
+<body>
+    <!-- Barra de tareas en el lado izquierdo -->
+    <div class="task-bar"></div>
+
+    <main class="main-container">
+        <h1 class="page-title">Tabla de Pacientes</h1>
+
+        <!-- Barra de búsqueda y botones dentro del main -->
+        <div class="input-container">
+            <input type="text" class="search-input" placeholder="Buscar por nombre...">
+            <div class="button-container">
+                <button class="square-button actualizar">Actualizar</button>
+                
+                <a href="{{ url_for('create.agregar_paciente') }}">
+                    <button>Agregar Paciente</button>
+                </a>
+                
+                <button class="square-button borrar">Borrar</button>
+                <div class="pagination">
+                    <button class="square-button" id="btnAtras" {% if page == 1 %}disabled{% endif %}>← Atrás</button>
+                    <button class="square-button" id="btnAdelante" {% if page >= total_pages %}disabled{% endif %}>Adelante →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Selecionar</th>
+                    <th>Nombre</th>
+                    <th>Apellidos</th>
+                    <th>Teléfono 1</th>
+                    <th>Teléfono 2</th>
+                    <th>Dirección</th>
+                    <th>Correo</th>
+                </tr>
+            </thead>
+            <tbody id="paciente-table-body">
+                {% for paciente in datos %}
+                    <tr>
+                        <td><input type="radio" name="selectRow" class="selectRow" data-id="{{ paciente.Id_Paciente }}" data-nombre="{{ paciente.Nombre_Pa }}"></td>
+                        <td>{{ paciente.Nombre_Pa }}</td>
+                        <td>{{ paciente.Apellidos }}</td>
+                        <td>{{ paciente.Teléfono1 }}</td>
+                        <td>{{ paciente.Teléfono2 }}</td>
+                        <td>{{ paciente.Dirección }}</td>
+                        <td>{{ paciente.Correo }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7">No hay pacientes disponibles.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+
+    <a href="{{ url_for('bienvenida') }}">Regresar</a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let selectedRow = null;
+            let currentPage = parseInt("{{ page }}");
+            let totalPages = parseInt("{{ total_pages }}");
+
+            document.getElementById("btnAtras").addEventListener("click", function() {
+                if (currentPage > 1) {
+                    window.location.href = `/ver/pacientes?page=${currentPage - 1}`;
+
+                    
+                }
+            });
+
+            document.getElementById("btnAdelante").addEventListener("click", function() {
+                if (currentPage < totalPages) {
+                    window.location.href = `/ver/pacientes?page=${currentPage + 1}`;
+
+                }
+            });
+
+            // Función para seleccionar un paciente al hacer clic en un radio button
+            document.querySelectorAll(".selectRow").forEach(radio => {
+                radio.addEventListener("change", function() {
+                    if (selectedRow) {
+                        selectedRow.classList.remove("selected");
+                    }
+                    selectedRow = this.closest("tr");
+                    selectedRow.classList.add("selected");
+                });
+            });
+
+            // Función para actualizar un paciente
+            document.querySelector(".square-button.actualizar").addEventListener("click", function() {
+                if (selectedRow) {
+                    const pacienteId = selectedRow.querySelector(".selectRow").dataset.id;
+                    window.location.href = `/actualizar/editar_paciente/${pacienteId}`;
+                } else {
+                    alert("Selecciona un paciente para actualizar.");
+                }
+            });
+
+            // Función para borrar un paciente
+            document.querySelector(".square-button.borrar").addEventListener("click", function() {
+                if (selectedRow) {
+                    const pacienteId = selectedRow.querySelector(".selectRow").dataset.id;
+
+                    if (confirm("¿Estás seguro de que deseas eliminar este paciente?")) {
+                        fetch(`/eliminar/borrar_paciente/${pacienteId}`, { 
+                            method: 'DELETE' 
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert("Paciente eliminado con éxito.");
+                                selectedRow.remove(); // Elimina la fila de la tabla
+                            } else {
+                                alert("Error al eliminar el paciente: " + data.message);
+                            }
+                        })
+                        .catch(error => console.error("Error:", error));
+                    }
+                } else {
+                    alert("Selecciona un paciente para borrar.");
+                }
+            });
+
+            // Función para la búsqueda de pacientes
+            // Función para la búsqueda de pacientes en todas las columnas
+            const searchInput = document.querySelector(".search-input");
+
+            searchInput.addEventListener("input", function() {
+                const filter = searchInput.value.toLowerCase();
+                const rows = document.querySelectorAll("table tbody tr");
+
+                rows.forEach(row => {
+                    let found = false;
+                    row.querySelectorAll("td").forEach(cell => {
+                        if (cell.textContent.toLowerCase().includes(filter)) {
+                            found = true;
+                        }
+                    });
+
+                    if (found) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>

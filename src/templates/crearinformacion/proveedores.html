@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Proveedor</title>
+</head>
+<body>
+    <h2>Ingresar Proveedor</h2>
+    <form method="POST">
+        
+        <label>Id del rpoveddor:</label>
+        <input type="number" name="Id_Proveedor" id="Id_Proveedor" required><br>
+        <!-- Código del Producto relacionado con el proveedor -->
+        <label>Código del Producto:</label>
+        <input type="number" name="Código_Prod" id="Código_Prod" required><br>
+    
+        <!-- Nombre del Proveedor -->
+        <label>Nombre del Proveedor:</label>
+        <input type="text" name="Nombre_Prov" id="Nombre_Prov" required><br>
+    
+        <!-- Correo del Proveedor -->
+        <label>Correo:</label>
+        <input type="email" name="Correo" id="Correo" required><br>
+    
+        <!-- Dirección del Proveedor -->
+        <label>Dirección:</label>
+        <input type="text" name="Dirección" id="Dirección" required><br>
+    
+        <!-- Teléfono del Proveedor -->
+        <label>Teléfono:</label>
+        <input type="text" name="Teléfono" id="Teléfono" required><br>
+    
+        <button type="submit">Guardar</button>
+    </form>
+
+    <a href="{{ url_for('verinformacion.ver_proveedores') }}">
+        <button>Regresar</button>
+    </a>
+    
+</body>
+</html>

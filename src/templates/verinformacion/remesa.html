@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remesas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/remesa.css') }}">
+</head>
+<body>
+    <div class="task-bar"></div>
+    
+    <main class="main-container">
+        <h1 class="page-title">Tabla Remesa</h1>
+        
+        <div class="input-container">
+            <input type="text" class="search-input" placeholder="Buscar...">
+            <div class="button-container">
+                <button class="square-button actualizar">Actualizar</button>
+                <button class="square-button borrar">Borrar</button>
+                <a href="{{ url_for('create.agregar_remesa') }}">
+                    <button>Agregar Remesa</button>
+                </a>
+                <div class="pagination">
+                    <button class="square-button" id="btnAtras" {% if page == 1 %}disabled{% endif %}>← Atrás</button>
+                    <button class="square-button" id="btnAdelante" {% if page >= total_pages %}disabled{% endif %}>Adelante →</button>
+                </div>
+            </div>
+        </div>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Seleccionar</th>
+                    <th>Remesa ID</th>
+                    <th>Proveedor</th>
+                    <th>Código Elemento</th>
+                    <th>Modelo</th>
+                    <th>Nombre</th>
+                    <th>Num. Entradas</th>
+                    <th>Factura</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for remesa in datos %}
+                <tr>
+                    <td><input type="radio" name="selectRow" class="selectRow" data-id="{{ remesa.id }}"></td>
+                    <td>{{ remesa.id }}</td>
+                    <td>{{ remesa.Proveedor }}</td>
+                    <td>{{ remesa.CodigoElemento }}</td>
+                    <td>{{ remesa.Modelo }}</td>
+                    <td>{{ remesa.Nombre }}</td>
+                    <td>{{ remesa.Num_Entradas }}</td>
+                    <td>{{ remesa.Factura }}</td>
+                    <td>{{ remesa.Fecha }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+    <a href="{{ url_for('bienvenida') }}">Regresar</a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+
+            let selectedRow = null;
+            
+            let currentPage = parseInt("{{ page }}");
+            let totalPages = parseInt("{{ total_pages }}");
+
+            document.getElementById("btnAtras").addEventListener("click", function() {
+                if (currentPage > 1) {
+                    window.location.href = `/ver/remesas?page=${currentPage - 1}`;
+
+                    
+                }
+            });
+
+            document.getElementById("btnAdelante").addEventListener("click", function() {
+                if (currentPage < totalPages) {
+                    window.location.href = `/ver/remesas?page=${currentPage + 1}`;
+
+                }
+            });
+
+
+            document.querySelectorAll(".selectRow").forEach(radio => {
+                radio.addEventListener("change", function() {
+                    if (selectedRow) {
+                        selectedRow.classList.remove("selected");
+                    }
+                    selectedRow = this.closest("tr");
+                    selectedRow.classList.add("selected");
+                });
+            });
+
+            document.querySelector(".square-button.actualizar").addEventListener("click", function() {
+                const seleccionado = document.querySelector(".selectRow:checked");
+                if (seleccionado) {
+                    const idRemesa = seleccionado.dataset.id;
+                    window.location.href = `/actualizar/editar_remesa/${idRemesa}`;
+                } else {
+                    alert("Selecciona una remesa para actualizar.");
+                }
+            });
+
+            document.querySelector(".square-button.borrar").addEventListener("click", function() {
+                const seleccionado = document.querySelector(".selectRow:checked");
+                if (seleccionado) {
+                    const idRemesa = seleccionado.dataset.id;
+                    if (confirm("¿Seguro que quieres eliminar esta remesa?")) {
+                        fetch(`/eliminar/borrar_remesa/${idRemesa}`, { method: 'DELETE' })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert("Remesa eliminada con éxito.");
+                                    seleccionado.closest("tr").remove();
+                                } else {
+                                    alert("Error al eliminar la remesa.");
+                                }
+                            })
+                            .catch(error => console.error("Error:", error));
+                    }
+                } else {
+                    alert("Selecciona una remesa para borrar.");
+                }
+            });
+
+
+            const searchInput = document.querySelector(".search-input");
+
+    searchInput.addEventListener("input", function() {
+        const filter = searchInput.value.toLowerCase();
+        const rows = document.querySelectorAll("table tbody tr");
+
+        rows.forEach(row => {
+            let found = false;
+            row.querySelectorAll("td").forEach(cell => {
+                if (cell.textContent.toLowerCase().includes(filter)) {
+                    found = true;
+                }
+            });
+
+            if (found) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Pago</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/paciente.css') }}">
+</head>
+<body>
+    <!-- Barra de tareas en el lado izquierdo -->
+    <div class="task-bar"></div>
+
+    <main class="main-container">
+        <h1 class="page-title">Actualizar Pago</h1>
+
+        <!-- Formulario de actualización de pago -->
+        <form method="POST">
+            <div class="form-group">
+                <label for="Id_Paciente">Id Paciente:</label>
+                <input type="text" id="Id_Paciente" name="Id_Paciente" value="{{ pago.Id_Paciente }}" required disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="Id_Venta">Id Venta:</label>
+                <input type="text" id="Id_Venta" name="Id_Venta" value="{{ pago.Id_Venta }}" required disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="SaldoAPagar">Saldo a Pagar:</label>
+                <input type="number" id="SaldoAPagar" name="SaldoAPagar" value="{{ pago.SaldoAPagar }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="Abono">Abono:</label>
+                <input type="number" id="Abono" name="Abono" value="{{ pago.Abono }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="SaldoActual">Saldo Actual:</label>
+                <input type="number" id="SaldoActual" name="SaldoActual" value="{{ pago.SaldoActual }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="Fecha">Fecha:</label>
+                <input type="date" id="Fecha" name="Fecha" value="{{ pago.Fecha }}" required>
+            </div>
+
+            <button type="submit" class="square-button">Actualizar</button>
+        </form>
+
+        <a href="{{ url_for('verinformacion.ver_pagos') }}">Regresar a la tabla de pagos</a>
+    </main>
+</body>
+</html>

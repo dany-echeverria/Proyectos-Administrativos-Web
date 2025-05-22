@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Producto</title>
+</head>
+<body>
+    <h1>Editar Producto</h1>
+    <form method="POST">
+        <label for="Id_Proveedor">Id Proveedor:</label>
+        <input type="text" name="Id_Proveedor" value="{{ producto.Id_Proveedor }}"><br><br>
+
+        <label for="Nombre_Prod">Nombre Producto:</label>
+        <input type="text" name="Nombre_Prod" value="{{ producto.Nombre_Prod }}"><br><br>
+
+        <label for="Precio">Precio:</label>
+        <input type="text" name="Precio" value="{{ producto.Precio }}"><br><br>
+
+        <label for="Modelo">Modelo:</label>
+        <input type="text" name="Modelo" value="{{ producto.Modelo }}"><br><br>
+
+        <label for="Cantidad">Cantidad:</label>
+        <input type="text" name="Cantidad" value="{{ producto.Cantidad }}"><br><br>
+
+        <label for="Materiales">Materiales:</label>
+        <input type="text" name="Materiales" value="{{ producto.Materiales }}"><br><br>
+
+        <button type="submit">Actualizar Producto</button>
+    </form>
+
+    <a href="{{ url_for('verinformacion.ver_inventarios') }}">
+        <button>Regresar</button>
+    </a>
+
+
+</body>
+</html>

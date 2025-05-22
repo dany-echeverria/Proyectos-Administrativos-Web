@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Proveedor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/proveedores.css') }}">
+</head>
+<body>
+    <div class="task-bar"></div>
+
+    <main class="main-container">
+        <h1 class="page-title">Actualizar Proveedor</h1>
+
+        <form method="POST">
+            <div class="input-container">
+                <label for="nombre">Nombre:</label>
+                <input type="text" name="nombre" id="nombre" value="{{ proveedor.Nombre_Prov }}" required>
+
+                <label for="correo">Correo:</label>
+                <input type="email" name="correo" id="correo" value="{{ proveedor.Correo }}" required>
+
+                <label for="direccion">Dirección:</label>
+                <input type="text" name="direccion" id="direccion" value="{{ proveedor.Dirección }}" required>
+
+                <label for="telefono">Teléfono:</label>
+                <input type="text" name="telefono" id="telefono" value="{{ proveedor.Teléfono }}" required>
+
+                <label for="producto">Producto:</label>
+                <input type="text" name="producto" id="producto" value="{{ proveedor.Código_Prod }}" required>
+            </div>
+
+            <button type="submit">Actualizar</button>
+        </form>
+
+        <a href="{{ url_for('verinformacion.ver_proveedores') }}">Cancelar</a>
+    </main>
+</body>
+</html>

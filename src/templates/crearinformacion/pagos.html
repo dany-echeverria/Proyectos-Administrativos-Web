@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Pago</title>
+    <style>
+        .search-container {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Ingresar Pago</h2>
+    <form method="POST">
+        <label>Id_Pago</label>
+        <input type="number" name="Id_Pago" id="Id_Pago" required><br>
+
+        <label>Id_Paciente</label>
+        <div class="search-container">
+            <input type="text" id="searchPaciente" placeholder="Buscar Paciente" onkeyup="filterPaciente()">
+            <select name="Id_Paciente" id="Id_Paciente" required>
+                <!-- Aquí se generarán los pacientes disponibles -->
+                {% for paciente in pacientes %}
+                    <option value="{{ paciente.Id_Paciente }}">{{ paciente.Id_Paciente }} - {{ paciente.Nombre_Pa }} {{ paciente.Apellidos }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <br>
+
+        <label>Id_Venta</label>
+        <div class="search-container">
+            <input type="text" id="searchVenta" placeholder="Buscar Venta" onkeyup="filterVenta()">
+            <select name="Id_Venta" id="Id_Venta" required>
+                <!-- Aquí se generarán las ventas disponibles -->
+                {% for venta in ventas %}
+                    <option value="{{ venta.Id_venta }}">{{ venta.Id_venta }} - {{ venta.Tratamiento }} ({{ venta.Anticipo }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+
+        <label>SaldoAPagar</label>
+        <input type="number" name="SaldoAPagar" id="SaldoAPagar" required><br>
+
+        <label>Abono</label>
+        <input type="number" name="Abono" id="Abono" required><br>
+
+        <label>SaldoActual</label>
+        <input type="number" name="SaldoActual" id="SaldoActual" required><br>
+
+        <label>Fecha</label>
+        <input type="date" name="Fecha" id="Fecha" required><br>  <!-- Cambié el nombre a Id_Proveedor -->
+
+        <button type="submit">Guardar</button>
+    </form>
+
+    <a href="{{ url_for('verinformacion.ver_pagos') }}">
+        <button>Regresar</button>
+    </a>
+
+    <script>
+        // Función para filtrar pacientes
+        function filterPaciente() {
+            var input = document.getElementById("searchPaciente");
+            var filter = input.value.toLowerCase();
+            var select = document.getElementById("Id_Paciente");
+            var options = select.getElementsByTagName("option");
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
+                var txtValue = option.textContent || option.innerText;
+                if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                    option.style.display = "";
+                } else {
+                    option.style.display = "none";
+                }
+            }
+        }
+
+        // Función para filtrar ventas
+        function filterVenta() {
+            var input = document.getElementById("searchVenta");
+            var filter = input.value.toLowerCase();
+            var select = document.getElementById("Id_Venta");
+            var options = select.getElementsByTagName("option");
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
+                var txtValue = option.textContent || option.innerText;
+                if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                    option.style.display = "";
+                } else {
+                    option.style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
