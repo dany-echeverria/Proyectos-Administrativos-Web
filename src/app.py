@@ -3,11 +3,11 @@
 from flask import Flask, render_template, session, redirect, url_for
 from src.config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS
 from src.db import db
-from routes.create import create_bp
-from routes.verinformacion import verinformacion_bp
-from routes.auth import auth_bp
-from routes.actualizar import actualizar_bp
-from routes.eliminar import eliminar_bp
+from src.routes.create import create_bp
+from src.routes.verinformacion import verinformacion_bp
+from src.routes.auth import auth_bp
+from src.routes.actualizar import actualizar_bp
+from src.routes.eliminar import eliminar_bp
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
