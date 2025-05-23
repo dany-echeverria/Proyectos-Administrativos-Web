@@ -4,38 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pacientes</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/paciente.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='resources/logo.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/inicio/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/verinformacion/paciente.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/all.min.css') }}">
+    <script src="https://kit.fontawesome.com/7f87e90d60.js" crossorigin="anonymous"></script>
 </head>
-<body>
-    <!-- Barra de tareas en el lado izquierdo -->
-    <div class="task-bar"></div>
+<body style="display: flex; height: 100vh;">
+    <!-- NAVBAR -->
+    <nav id="fullscreen-menu" class="navbar navbar-hidden">
+        <div class="nav-logo">
+            <span class="fondo-img-logo">
+                <img src="{{ url_for('static', filename='resources/logo.png') }}" class="nav-img-logo" alt="Logo">
+            </span>
+            <span class="nav-titulo">
+                <h2 class="nav-titulo1">Óptica</h2>
+                <h2 class="nav-titulo2">Sima</h2>
+            </span>
+        </div>
+        
+        <ul class="nav-buttons">
+            <li class="nav-btn"><a href="{{ url_for('verinformacion.ver_proveedores') }}"><i class="fa-solid fa-truck"></i><span class="nav-btn-texto">Proveedores</span></a></li>
+            <li class="nav-btn"><a href="{{ url_for('verinformacion.ver_remesas') }}"><i class="fa-solid fa-coins"></i><span class="nav-btn-texto">Remesas</span></a></li>
+            <li class="nav-btn"><a href="{{ url_for('verinformacion.ver_ventas') }}"><i class="fa-solid fa-money-bill-wave"></i><span class="nav-btn-texto">Ventas</span></a></li>
+            <li class="nav-btn btn-pacientes"><a href="{{ url_for('verinformacion.ver_pacientes') }}"><i class="fa-solid fa-users"></i><span class="nav-btn-texto">Pacientes</span></a></li>
+            <li class="nav-btn"><a href="{{ url_for('verinformacion.ver_inventarios') }}"><i class="fa-solid fa-boxes-stacked"></i><span class="nav-btn-texto">Inventario</span></a></li>
+            <li class="nav-btn"><a href="{{ url_for('verinformacion.ver_pagos') }}"><i class="fa-solid fa-cash-register"></i><span class="nav-btn-texto">Pagos</span></a></li>
+        </ul>
+
+        <a href="{{ url_for('auth.login') }}">
+            <button class="btn-cerrarSesion"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </a>
+    </nav>
 
     <main class="main-container">
         <h1 class="page-title">Tabla de Pacientes</h1>
 
-        <!-- Barra de búsqueda y botones dentro del main -->
-        <div class="input-container">
-            <input type="text" class="search-input" placeholder="Buscar por nombre...">
-            <div class="button-container">
-                <button class="square-button actualizar">Actualizar</button>
-                
+        <div class="barAndTableContainer">
+            <!-- Búsqueda avanzada -->
+        <div class="search-container">
+            <select id="campoBusqueda">
+                <option value="Nombre_Pa">Nombre</option>
+                <option value="Apellidos">Apellidos</option>
+                <option value="Correo">Correo</option>
+            </select>
+
+            <input type="text" id="searchInput" placeholder="Buscar..." class="searchInput">
+
+            <div class="buttons-tools">
+                <button id="btnBuscar" class="icon-button blue">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+
+                <a href="{{ url_for('verinformacion.ver_pacientes') }}">
+                    <button class="icon-button gray">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </a>
+
+                <button class="icon-button yellow actualizar" title="Actualizar">
+                    <i class="fa fa-sync-alt"></i>
+                </button>
+
                 <a href="{{ url_for('create.agregar_paciente') }}">
-                    <button>Agregar Paciente</button>
+                    <button class="icon-button green" title="Agregar">
+                        <i class="fa fa-plus"></i>
+                    </button>
                 </a>
                 
-                <button class="square-button borrar">Borrar</button>
-                <div class="pagination">
-                    <button class="square-button" id="btnAtras" {% if page == 1 %}disabled{% endif %}>← Atrás</button>
-                    <button class="square-button" id="btnAdelante" {% if page >= total_pages %}disabled{% endif %}>Adelante →</button>
-                </div>
+
+                <button class="icon-button red borrar" title="Borrar">
+                    <i class="fa fa-minus"></i>
+                </button>
+
+                <button class="icon-button blue" id="btnAtras" title="Anterior" {% if page == 1 %}disabled{% endif %}>
+                    <i class="fa fa-arrow-left"></i>
+                </button>
+
+                <button class="icon-button blue" id="btnAdelante" title="Siguiente" {% if page >= total_pages %}disabled{% endif %}>
+                    <i class="fa fa-arrow-right"></i>
+                </button>
             </div>
+            
         </div>
 
         <!-- Tabla -->
         <table>
             <thead>
                 <tr>
-                    <th>Selecionar</th>
+                    <th>Seleccionar</th>
                     <th>Nombre</th>
                     <th>Apellidos</th>
                     <th>Teléfono 1</th>
@@ -46,60 +103,61 @@
             </thead>
             <tbody id="paciente-table-body">
                 {% for paciente in datos %}
-                    <tr>
-                        <td><input type="radio" name="selectRow" class="selectRow" data-id="{{ paciente.Id_Paciente }}" data-nombre="{{ paciente.Nombre_Pa }}"></td>
-                        <td>{{ paciente.Nombre_Pa }}</td>
-                        <td>{{ paciente.Apellidos }}</td>
-                        <td>{{ paciente.Teléfono1 }}</td>
-                        <td>{{ paciente.Teléfono2 }}</td>
-                        <td>{{ paciente.Dirección }}</td>
-                        <td>{{ paciente.Correo }}</td>
-                    </tr>
+                <tr>
+                    <td><input type="radio" name="selectRow" class="selectRow" data-id="{{ paciente.Id_Paciente }}" data-nombre="{{ paciente.Nombre_Pa }}"></td>
+                    <td>{{ paciente.Nombre_Pa }}</td>
+                    <td>{{ paciente.Apellidos }}</td>
+                    <td>{{ paciente.Teléfono1 }}</td>
+                    <td>{{ paciente.Teléfono2 }}</td>
+                    <td>{{ paciente.Dirección }}</td>
+                    <td>{{ paciente.Correo }}</td>
+                </tr>
                 {% else %}
-                    <tr>
-                        <td colspan="7">No hay pacientes disponibles.</td>
-                    </tr>
+                <tr><td colspan="7">No hay pacientes disponibles.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
+        </div>
+        
     </main>
 
-    <a href="{{ url_for('bienvenida') }}">Regresar</a>
 
+    <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             let selectedRow = null;
             let currentPage = parseInt("{{ page }}");
             let totalPages = parseInt("{{ total_pages }}");
 
-            document.getElementById("btnAtras").addEventListener("click", function() {
-                if (currentPage > 1) {
-                    window.location.href = `/ver/pacientes?page=${currentPage - 1}`;
-
-                    
+            // Búsqueda
+            document.getElementById("btnBuscar").addEventListener("click", () => {
+                const campo = document.getElementById("campoBusqueda").value;
+                const valor = document.getElementById("searchInput").value.trim();
+                if (valor !== "") {
+                    window.location.href = `/ver/pacientes?campo=${campo}&valor=${valor}`;
                 }
             });
 
-            document.getElementById("btnAdelante").addEventListener("click", function() {
-                if (currentPage < totalPages) {
-                    window.location.href = `/ver/pacientes?page=${currentPage + 1}`;
-
-                }
+            // Botones de navegación
+            document.getElementById("btnAtras").addEventListener("click", () => {
+                if (currentPage > 1) window.location.href = `/ver/pacientes?page=${currentPage - 1}`;
             });
 
-            // Función para seleccionar un paciente al hacer clic en un radio button
+            document.getElementById("btnAdelante").addEventListener("click", () => {
+                if (currentPage < totalPages) window.location.href = `/ver/pacientes?page=${currentPage + 1}`;
+            });
+
+            // Selección de fila
             document.querySelectorAll(".selectRow").forEach(radio => {
                 radio.addEventListener("change", function() {
-                    if (selectedRow) {
-                        selectedRow.classList.remove("selected");
-                    }
+                    document.querySelectorAll("tr.selected").forEach(r => r.classList.remove("selected"));
+                    this.closest("tr").classList.add("selected");
                     selectedRow = this.closest("tr");
-                    selectedRow.classList.add("selected");
                 });
             });
 
-            // Función para actualizar un paciente
-            document.querySelector(".square-button.actualizar").addEventListener("click", function() {
+            // Actualización de paciente
+            document.querySelector(".actualizar").addEventListener("click", () => {
                 if (selectedRow) {
                     const pacienteId = selectedRow.querySelector(".selectRow").dataset.id;
                     window.location.href = `/actualizar/editar_paciente/${pacienteId}`;
@@ -108,55 +166,24 @@
                 }
             });
 
-            // Función para borrar un paciente
-            document.querySelector(".square-button.borrar").addEventListener("click", function() {
-                if (selectedRow) {
+            // Borrado de paciente
+            document.querySelector(".borrar").addEventListener("click", () => {
+                if (selectedRow && confirm("¿Seguro que quieres eliminar este paciente?")) {
                     const pacienteId = selectedRow.querySelector(".selectRow").dataset.id;
-
-                    if (confirm("¿Estás seguro de que deseas eliminar este paciente?")) {
-                        fetch(`/eliminar/borrar_paciente/${pacienteId}`, { 
-                            method: 'DELETE' 
-                        })
-                        .then(response => response.json())
+                    fetch(`/eliminar/borrar_paciente/${pacienteId}`, { method: 'DELETE' })
+                        .then(res => res.json())
                         .then(data => {
                             if (data.success) {
                                 alert("Paciente eliminado con éxito.");
-                                selectedRow.remove(); // Elimina la fila de la tabla
+                                selectedRow.remove();
                             } else {
-                                alert("Error al eliminar el paciente: " + data.message);
+                                alert("Error al eliminar el paciente.");
                             }
-                        })
-                        .catch(error => console.error("Error:", error));
-                    }
+                        });
                 } else {
                     alert("Selecciona un paciente para borrar.");
                 }
             });
-
-            // Función para la búsqueda de pacientes
-            // Función para la búsqueda de pacientes en todas las columnas
-            const searchInput = document.querySelector(".search-input");
-
-            searchInput.addEventListener("input", function() {
-                const filter = searchInput.value.toLowerCase();
-                const rows = document.querySelectorAll("table tbody tr");
-
-                rows.forEach(row => {
-                    let found = false;
-                    row.querySelectorAll("td").forEach(cell => {
-                        if (cell.textContent.toLowerCase().includes(filter)) {
-                            found = true;
-                        }
-                    });
-
-                    if (found) {
-                        row.style.display = "";
-                    } else {
-                        row.style.display = "none";
-                    }
-                });
-            });
-
         });
     </script>
 </body>

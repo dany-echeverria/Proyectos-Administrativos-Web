@@ -3,162 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proveedores</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/paciente.css') }}">
+    <title>Pagos</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='resources/logo.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/inicio/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/verinformacion/pagos.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/all.min.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/7f87e90d60.js" crossorigin="anonymous"></script>
 </head>
-<body>
-    <!-- Barra de tareas en el lado izquierdo -->
-    <div class="task-bar"></div>
+<body style="display: flex; height: 100vh;">
+    <nav id="fullscreen-menu" class="navbar navbar-hidden">
+        <div class="nav-logo">
+            <span class="fondo-img-logo">
+                <img src="{{ url_for('static', filename='resources/logo.png') }}" class="nav-img-logo" alt="Logo">
+            </span>
+            <span class="nav-titulo">
+                <h2 class="nav-titulo1">Óptica</h2>
+                <h2 class="nav-titulo2">Sima</h2>
+            </span>
+        </div>
+
+        <ul class="nav-buttons">
+            <li class="nav-btn btn-proveedores">
+                <a href="{{ url_for('verinformacion.ver_proveedores') }}">
+                    <i class="fa-solid fa-truck"></i>
+                    <span class="nav-btn-texto">Proveedores</span>
+                </a></li>
+            <li class="nav-btn btn-remesas">
+                <a href="{{ url_for('verinformacion.ver_remesas') }}">
+                    <i class="fa-solid fa-coins"></i>
+                    <span class="nav-btn-texto">Remesas</span>
+                </a></li>
+            <li class="nav-btn btn-ventas">
+                <a href="{{ url_for('verinformacion.ver_ventas') }}">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                    <span class="nav-btn-texto">Ventas</span>
+                </a></li>
+            <li class="nav-btn btn-pacientes">
+                <a href="{{ url_for('verinformacion.ver_pacientes') }}">
+                    <i class="fa-solid fa-users"></i>
+                    <span class="nav-btn-texto">Pacientes</span>
+                </a></li>
+            <li class="nav-btn btn-inventario">
+                <a href="{{ url_for('verinformacion.ver_inventarios') }}">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    <span class="nav-btn-texto">Inventario</span>
+                </a></li>
+            <li class="nav-btn btn-pagos">
+                <a href="{{ url_for('verinformacion.ver_pagos') }}">
+                    <i class="fa-solid fa-cash-register"></i>
+                    <span class="nav-btn-texto">Pagos</span>
+                </a></li>
+        </ul>
+
+        <a href="{{ url_for('auth.login') }}" class="link-cerrarSesion">
+            <button class="btn-cerrarSesion"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </a>
+    </nav>
 
     <main class="main-container">
         <h1 class="page-title">Tabla de Pagos</h1>
 
-        <!-- Barra de búsqueda y botones dentro del main -->
-        <div class="input-container">
-            <input type="text" class="search-input" placeholder="Buscar...">
-            <div class="button-container">
-                <button class="square-button actualizar">Actualizar</button>
-                <button class="square-button borrar">Borrar</button>
-                <a href="{{ url_for('create.agregar_pago') }}">
-                    <button>Agregar Pago</button>
-                </a>
-                <div class="pagination">
-                    <button class="square-button" id="btnAtras" {% if page == 1 %}disabled{% endif %}>← Atrás</button>
-                    <button class="square-button" id="btnAdelante" {% if page >= total_pages %}disabled{% endif %}>Adelante →</button>
-                </div>
-            </div>
-        </div>
+        <div class="barAndTableContainer">
+            <div class="search-container">
+                <select id="campoBusqueda">
+                    <option value="Id_Paciente">Id_Paciente</option>
+                    <option value="Id_Pago">Id_Pago</option>
+                    <option value="Id_Venta">Id_Venta</option>
+                    <option value="Fecha">Fecha</option>
+                    <option value="SaldoAPagar">SaldoAPagar</option>
+                    <option value="Abono">Abono</option>
+                </select>
 
-        <!-- Tabla -->
-        <table>
-            <thead>
-                <tr>
-                    <th>Seleccionar</th>
-                    <th>Id_Pago</th>
-                    <th>Id_Paciente</th>
-                    <th>Id_Venta</th>
-                    <th>Saldo A Pagar</th>
-                    <th>Abono</th>
-                    <th>Saldo Actual</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for pago in datos %}
+                <input type="text" id="searchInput" placeholder="Buscar..." class="searchInput">
+
+                <div class="buttons-tools">
+                    <button id="btnBuscar" class="icon-button blue">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    <a href="{{ url_for('verinformacion.ver_pagos') }}"><button class="icon-button gray">
+                        <i class="fa-solid fa-eye"></i>
+                    </button></a>
+        
+                    <button class="icon-button yellow actualizar" title="Actualizar"><i class="fas fa-sync-alt"></i></button>
+        
+                    <a href="{{ url_for('create.agregar_pago') }}">
+                        <button class="icon-button green" title="Agregar"><i class="fas fa-plus"></i></button>
+                    </a>
+        
+                    <button class="icon-button red borrar" title="Borrar"><i class="fas fa-minus"></i></button>
+        
+                    <button class="icon-button blue" id="btnAtras" title="Anterior" {% if page == 1 %}disabled{% endif %}><i class="fas fa-arrow-left"></i></button>
+                    <button class="icon-button blue" id="btnAdelante" title="Siguiente" {% if page >= total_pages %}disabled{% endif %}><i class="fas fa-arrow-right"></i></button>
+                </div>
+                
+            </div>
+            
+            <table>
+                <thead>
                     <tr>
-                        <td><input type="radio" name="selectRow" class="selectRow" data-id="{{ pago.Id_Pago }}" data-id_paciente="{{ pago.Id_Paciente }}"></td>
-                        <td>{{ pago.Id_Pago }}</td>
-                        <td>{{ pago.Id_Paciente }}</td>
-                        <td>{{ pago.Id_Venta }}</td>
-                        <td>{{ pago.SaldoAPagar }}</td>
-                        <td>{{ pago.Abono }}</td>
-                        <td>{{ pago.SaldoActual }}</td>
-                        <td>{{ pago.Fecha }}</td>
+                        <th>Seleccionar</th>
+                        <th>Id_Pago</th>
+                        <th>Id_Paciente</th>
+                        <th>Id_Venta</th>
+                        <th>Saldo A Pagar</th>
+                        <th>Abono</th>
+                        <th>Saldo Actual</th>
+                        <th>Fecha</th>
+                        <th>Producto Entregado</th>
                     </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="8">No hay pagos registrados.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody id="pagosTableBody">
+                    {% for pago in datos %}
+                        <tr>
+                            <td><input type="radio" name="selectRow" class="selectRow" data-id="{{ pago.Id_Pago }}"></td>
+                            <td>{{ pago.Id_Pago }}</td>
+                            <td>{{ pago.Id_Paciente }} - {{ pago.paciente.Nombre_Pa }} {{ pago.paciente.Apellidos }}</td>
+                            <td>{{ pago.Id_Venta }}</td>
+                            <td>{{ pago.SaldoAPagar }}</td>
+                            <td>{{ pago.Abono }}</td>
+                            <td>{{ pago.SaldoActual }}</td>
+                            <td>{{ pago.Fecha }}</td>
+                            <td>{{ 'Sí' if pago.ProductoEntregado else 'No' }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="9">No hay pagos registrados.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </main>
 
-    <a href="{{ url_for('bienvenida') }}">Regresar</a>
 
+    <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             let selectedRow = null;
-            
-            let currentPage = parseInt("{{ page }}");
-            let totalPages = parseInt("{{ total_pages }}");
-    
-            // Función para paginar hacia atrás
-            document.getElementById("btnAtras").addEventListener("click", function() {
-                if (currentPage > 1) {
-                    window.location.href = `/ver/pagos?page=${currentPage - 1}`;
-                }
-            });
-    
-            // Función para paginar hacia adelante
-            document.getElementById("btnAdelante").addEventListener("click", function() {
-                if (currentPage < totalPages) {
-                    window.location.href = `/ver/pagos?page=${currentPage + 1}`;
-                }
-            });
-    
-            // Seleccionar fila con el radio button
+            const currentPage = parseInt("{{ page }}");
+            const totalPages = parseInt("{{ total_pages }}");
+
+            document.getElementById("btnAtras").onclick = () => {
+                if (currentPage > 1) location.href = `/ver/pagos?page=${currentPage - 1}`;
+            };
+
+            document.getElementById("btnAdelante").onclick = () => {
+                if (currentPage < totalPages) location.href = `/ver/pagos?page=${currentPage + 1}`;
+            };
+
             document.querySelectorAll(".selectRow").forEach(radio => {
-                radio.addEventListener("change", function() {
-                    if (selectedRow) {
-                        selectedRow.classList.remove("selected");
-                    }
+                radio.addEventListener("change", function () {
+                    if (selectedRow) selectedRow.classList.remove("selected");
                     selectedRow = this.closest("tr");
                     selectedRow.classList.add("selected");
                 });
             });
-    
-            // Función para actualizar
-            document.querySelector(".square-button.actualizar").addEventListener("click", function() {
-                if (selectedRow) {
-                    const pagoId = selectedRow.querySelector(".selectRow").dataset.id;
-                    window.location.href = `/actualizar/editar_pago/${pagoId}`;
+
+            document.querySelector(".actualizar").onclick = () => {
+                const seleccionado = document.querySelector(".selectRow:checked");
+                if (seleccionado) {
+                    location.href = `/actualizar/editar_pago/${seleccionado.dataset.id}`;
                 } else {
                     alert("Selecciona un pago para actualizar.");
                 }
-            });
-    
-            // Función de eliminación
-            document.querySelector(".square-button.borrar").addEventListener("click", function() {
-                if (selectedRow) {
-                    const pagoId = selectedRow.querySelector(".selectRow").dataset.id;  // Obtener Id_Pago
-                    console.log(`ID del pago seleccionado: ${pagoId}`);  // Depuración
-    
-                    const confirmDelete = confirm("¿Estás seguro de que deseas eliminar este pago?");
-                    if (confirmDelete) {
-                        fetch(`/eliminar/borrar_pago/${pagoId}`, { 
-                            method: 'DELETE' 
-                        })
-                        .then(response => response.json())
+            };
+
+            document.querySelector(".borrar").onclick = () => {
+                const seleccionado = document.querySelector(".selectRow:checked");
+                if (seleccionado && confirm("¿Deseas eliminar este pago?")) {
+                    fetch(`/eliminar/borrar_pago/${seleccionado.dataset.id}`, { method: 'DELETE' })
+                        .then(res => res.json())
                         .then(data => {
-                            console.log(data);  // Depuración de la respuesta
                             if (data.success) {
-                                alert(data.message);  // Mensaje de éxito
-                                selectedRow.remove();  // Eliminar la fila de la tabla
-                                selectedRow = null;  // Limpiar la selección
+                                alert("Pago eliminado.");
+                                seleccionado.closest("tr").remove();
                             } else {
-                                alert(data.message);  // Mostrar mensaje de error
+                                alert("Error: " + data.message);
                             }
-                        })
-                        .catch(error => {
-                            alert("Hubo un error al intentar eliminar el pago: " + error.message);
-                            console.error(error);  // Depuración adicional para ver el error
                         });
-                    }
                 } else {
-                    alert("Selecciona un pago para borrar.");
+                    alert("Selecciona un pago para eliminar.");
                 }
-            });
-    
-            // Funcionalidad de la búsqueda
-            const searchInput = document.querySelector(".search-input");
-            searchInput.addEventListener("input", function() {
-                const filter = searchInput.value.toLowerCase();
-                const rows = document.querySelectorAll("table tbody tr");
-    
-                rows.forEach(row => {
-                    const cells = row.getElementsByTagName("td");
-                    const idPago = cells[1].textContent.toLowerCase();  // Id_Pago está en la segunda columna
-    
-                    if (idPago.indexOf(filter) > -1) {
-                        row.style.display = "";
-                    } else {
-                        row.style.display = "none";
-                    }
-                });
+            };
+
+            const btnBuscar = document.getElementById("btnBuscar");
+
+            btnBuscar.addEventListener("click", () => {
+                const campo = document.getElementById("campoBusqueda").value;
+                const valor = document.getElementById("searchInput").value.trim();
+                if (valor !== "") {
+                    window.location.href = `/ver/pagos?campo=${campo}&valor=${valor}`;
+                }
             });
         });
     </script>
-    
 </body>
 </html>

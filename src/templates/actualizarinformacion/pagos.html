@@ -4,51 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Actualizar Pago</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/paciente.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/actualizarinformacion/pagos.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/all.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 </head>
 <body>
-    <!-- Barra de tareas en el lado izquierdo -->
-    <div class="task-bar"></div>
 
     <main class="main-container">
         <h1 class="page-title">Actualizar Pago</h1>
 
-        <!-- Formulario de actualización de pago -->
         <form method="POST">
             <div class="form-group">
-                <label for="Id_Paciente">Id Paciente:</label>
-                <input type="text" id="Id_Paciente" name="Id_Paciente" value="{{ pago.Id_Paciente }}" required disabled>
+                <label for="Id_Paciente">Paciente:</label>
+                <div class="input-container">
+                    <input type="text" id="Id_Paciente" name="Id_Paciente" value="{{ pago.Id_Paciente }}" required disabled>
+                    <i class="fa-solid fa-id-card"></i>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="Id_Venta">Id Venta:</label>
-                <input type="text" id="Id_Venta" name="Id_Venta" value="{{ pago.Id_Venta }}" required disabled>
+                <label for="Id_Venta">Venta:</label>
+                <div class="input-container">
+                    <input type="text" id="Id_Venta" name="Id_Venta" value="{{ pago.Id_Venta }}" required disabled>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="SaldoAPagar">Saldo a Pagar:</label>
-                <input type="number" id="SaldoAPagar" name="SaldoAPagar" value="{{ pago.SaldoAPagar }}" required>
+                <div class="input-container">
+                    <input type="number" step="0.01" id="SaldoAPagar" name="SaldoAPagar" value="{{ pago.SaldoAPagar }}" required>
+                    <i class="fa-solid fa-dollar-sign"></i>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="Abono">Abono:</label>
-                <input type="number" id="Abono" name="Abono" value="{{ pago.Abono }}" required>
+                <div class="input-container">
+                    <input type="number" step="0.01" id="Abono" name="Abono" value="{{ pago.Abono }}" oninput="calcularSaldoActual()" required>
+                    <i class="fa-regular fa-money-bill-1"></i>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="SaldoActual">Saldo Actual:</label>
-                <input type="number" id="SaldoActual" name="SaldoActual" value="{{ pago.SaldoActual }}" required>
+                <div class="input-container">
+                    <input type="number" step="0.01" id="SaldoActual" name="SaldoActual" value="{{ pago.SaldoActual }}" required>
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="Fecha">Fecha:</label>
-                <input type="date" id="Fecha" name="Fecha" value="{{ pago.Fecha }}" required>
+                <div class="input-container">
+                    <input type="date" id="Fecha" name="Fecha" value="{{ pago.Fecha }}" required>
+                    <i class="fa-solid fa-calendar-days"></i>
+                </div>
             </div>
 
-            <button type="submit" class="square-button">Actualizar</button>
+            <div class="botones-accion">
+                <button type="submit">Actualizar</button>
+                <a href="{{ url_for('verinformacion.ver_pagos') }}">
+                    <button type="button">Regresar</button>
+                </a>
+            </div>
         </form>
 
-        <a href="{{ url_for('verinformacion.ver_pagos') }}">Regresar a la tabla de pagos</a>
     </main>
+
+    <script>
+        function calcularSaldoActual() {
+            const saldo = parseFloat(document.getElementById("SaldoAPagar").value) || 0;
+            const abono = parseFloat(document.getElementById("Abono").value) || 0;
+            const saldoActual = saldo - abono;
+            document.getElementById("SaldoActual").value = saldoActual.toFixed(2);
+        }
+    </script>
+
 </body>
 </html>

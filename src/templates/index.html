@@ -2,24 +2,67 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index/iniciarsesion.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/all.min.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='resources/logo.png') }}" type="image/x-icon">
+    <script src="https://kit.fontawesome.com/7f87e90d60.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <h1>Iniciar Sesión</h1>
-    <form action="{{ url_for('auth.login') }}" method="post">
-        <label>Usuario:</label>
-        <input type="text" name="usuario" required><br>
-        <label>Contraseña:</label>
-        <input type="password" name="contrasena" required><br>
-        <button type="submit">Entrar</button>
-    </form>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <p class="{{ category }}">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+    <!-- SVG decorativos -->
+    <svg class="circle" width="410" height="410" viewBox="0 0 410 410" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="204.999" cy="205" r="46.8077" stroke="white" stroke-opacity="0.2"/>
+        <circle cx="204.999" cy="203.423" r="78.3462" stroke="white" stroke-opacity="0.2"/>
+        <circle cx="205" cy="203.423" r="109.885" stroke="white" stroke-opacity="0.2"/>
+        <circle cx="204.999" cy="205" r="141.423" stroke="white" stroke-opacity="0.2"/>
+        <circle cx="205" cy="203.423" r="172.962" stroke="white" stroke-opacity="0.2"/>
+        <circle cx="205" cy="205" r="204.5" stroke="white" stroke-opacity="0.2"/>
+    </svg>
+
+    <svg class="circle2" width="410" height="410" viewBox="0 0 410 410" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="204.999" cy="205" r="46.8077" stroke="white" stroke-opacity="0.2"/>
+        <circle cx="204.999" cy="203.423" r="78.3462" stroke="white" stroke-opacity="0.2"/>
+        <circle cx="205" cy="203.423" r="109.885" stroke="white" stroke-opacity="0.2"/>
+        <circle cx="204.999" cy="205" r="141.423" stroke="white" stroke-opacity="0.2"/>
+        <circle cx="205" cy="203.423" r="172.962" stroke="white" stroke-opacity="0.2"/>
+        <circle cx="205" cy="205" r="204.5" stroke="white" stroke-opacity="0.2"/>
+    </svg>
+
+    <!-- Contenedor del login -->
+    <main class="login-container">
+        <form action="{{ url_for('auth.login') }}" method="post" class="login-form">
+            <h2 class="title">Iniciar Sesión</h2>
+
+            <div class="container1">
+                <div class="inputs">
+                    <div class="input-container input-user">
+                        <input class="input-field" type="text" name="usuario" required>
+                        <i class="fa-solid fa-user icon-user"></i>
+                    </div>
+                    <div class="input-container input-password">
+                        <input class="input-field" type="password" name="contrasena" required>
+                        <i class="fa-solid fa-lock icon-password"></i>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btnAcceder">Acceder</button>
+
+            
+        </form>
+    </main>
+
+    <script>
+        const elem = document.querySelector('.btnAcceder');
+
+        function ejecutarAnimacion() {
+            elem.style.animation = 'none';
+            elem.offsetHeight;
+            elem.style.animation = 'buttonMove 1s ease forwards, buttonMoveSalir 0.3s ease 1.2s forwards';
+        }
+
+        setInterval(ejecutarAnimacion, 10000);
+    </script>
 </body>
 </html>

@@ -4,41 +4,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Venta</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/ventas.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/actualizarinformacion/ventas.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/all.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <main class="main-container">
         <h1 class="page-title">Editar Venta</h1>
 
         <form method="POST">
-            <label for="Id_Paciente">Paciente:</label>
-            <input type="text" name="Id_Paciente" value="{{ venta.Id_Paciente }}" required><br>
+            <input type="hidden" name="Id_venta" value="{{ venta.Id_venta }}">
 
-            <label for="graduacion_ojo_derecho">Graduación ojo derecho</label>
-            <input type="text" name="graduacion_ojo_derecho" value="{{ venta.graduacion_ojo_derecho }}" required><br>
-            
-            <label for="graduacion_ojo_izquierdo">Graduación ojo izquierdo</label>
-            <input type="text" name="graduacion_ojo_izquierdo" value="{{ venta.graduacion_ojo_izquierdo }}" required><br>
+            <label for="Id_Paciente">Paciente:</label>
+            <div class="input-container">
+                <input type="text" name="Id_Paciente" value="{{ venta.Id_Paciente }}" required>
+                <i class="fa-solid fa-user"></i>
+            </div><br>
+
+            <label for="graduacion_ojo_derecho">Graduación ojo derecho:</label>
+            <div class="input-container">
+                <input type="text" name="graduacion_ojo_derecho" value="{{ venta.graduacion_ojo_derecho }}" required>
+                <i class="fa-solid fa-eye"></i>
+            </div><br>
+
+            <label for="graduacion_ojo_izquierdo">Graduación ojo izquierdo:</label>
+            <div class="input-container">
+                <input type="text" name="graduacion_ojo_izquierdo" value="{{ venta.graduacion_ojo_izquierdo }}" required>
+                <i class="fa-solid fa-eye"></i>
+            </div><br>
 
             <label for="Armason">Armazón:</label>
-            <input type="text" name="Armason" value="{{ venta.Armason }}" required><br>
+            <div class="input-container">
+                <input type="text" name="Armason" value="{{ venta.Armason }}" required>
+                <i class="fa-solid fa-glasses"></i>
+            </div><br>
 
             <label for="Tratamiento">Tratamiento:</label>
-            <input type="text" name="Tratamiento" value="{{ venta.Tratamiento }}" required><br>
+            <div class="input-container">
+                <input type="text" name="Tratamiento" value="{{ venta.Tratamiento }}" required>
+                <i class="fa-solid fa-capsules"></i>
+            </div><br>
+
+            <label for="observaciones">observaciones:</label>
+            <div class="input-container">
+                <input type="text" name="observaciones" value="{{ venta.observaciones }}" required>
+                <i class="fa-solid fa-capsules"></i>
+            </div><br>
+
+            
 
             <label for="Anticipo">Anticipo:</label>
-            <input type="number" name="Anticipo" value="{{ venta.Anticipo }}" required><br>
+            <div class="input-container">
+                <input type="number" name="Anticipo" id="Anticipo" value="{{ venta.Anticipo }}" required>
+                <i class="fa-solid fa-money-bill-wave"></i>
+            </div><br>
 
             <label for="Adeudo">Adeudo:</label>
-            <input type="number" name="Adeudo" value="{{ venta.Adeudo }}" required><br>
+            <div class="input-container">
+                <input type="number" name="Adeudo" id="Adeudo" value="{{ venta.Adeudo }}" required readonly>
+                <i class="fa-solid fa-credit-card"></i>
+            </div>
+            <div id="mensajeCambio" style="color:red; font-weight:bold;"></div>
+            <br>
 
-            <label for="Fecha">Fecha:</label>
-            <input type="date" name="Fecha" value="{{ venta.Fecha }}" required><br>
+            <label for="FechaVenta">Fecha de venta:</label>
+            <div class="input-container">
+                <input type="date" name="FechaVenta" value="{{ venta.FechaVenta }}" required>
+                <i class="fa-solid fa-calendar-days"></i>
+            </div><br>
 
-            <button type="submit">Guardar Cambios</button>
+            <label for="FechaEntrega">Fecha de entrega:</label>
+            <div class="input-container">
+                <input type="date" name="FechaEntrega" value="{{ venta.FechaEntrega }}">
+                <i class="fa-solid fa-calendar-days"></i>
+            </div><br>
+
+            <div class="botones-accion">
+                <button type="submit">Guardar Cambios</button>
+                <a href="{{ url_for('verinformacion.ver_ventas') }}">
+                    <button type="button">Regresar</button>
+                </a>
+            </div>
         </form>
-
-        <a href="{{ url_for('verinformacion.ver_ventas') }}">Regresar a la lista de ventas</a>
     </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const anticipoInput = document.getElementById("Anticipo");
+            const adeudoInput = document.getElementById("Adeudo");
+            const mensajeCambio = document.getElementById("mensajeCambio");
+
+            const adeudoOriginal = parseFloat("{{ venta.Adeudo }}") || 0;
+
+            function actualizarAdeudo() {
+                const anticipo = parseFloat(anticipoInput.value) || 0;
+                let adeudoCalculado = adeudoOriginal - anticipo;
+
+                if (adeudoCalculado <= 0) {
+                    adeudoInput.value = "0.00";
+                    if (anticipo > adeudoOriginal) {
+                        const cambio = (anticipo - adeudoOriginal).toFixed(2);
+                        mensajeCambio.textContent = `Cambio a entregar: $${cambio}`;
+                    } else {
+                        mensajeCambio.textContent = "";
+                    }
+                } else {
+                    adeudoInput.value = adeudoCalculado.toFixed(2);
+                    mensajeCambio.textContent = "";
+                }
+            }
+
+            anticipoInput.addEventListener("input", actualizarAdeudo);
+        });
+        
+    </script>
 </body>
 </html>

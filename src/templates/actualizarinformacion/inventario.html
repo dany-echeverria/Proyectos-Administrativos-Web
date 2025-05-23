@@ -1,38 +1,59 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8">    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Producto</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/actualizarinformacion/inventario.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/all.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <h1>Editar Producto</h1>
+
     <form method="POST">
         <label for="Id_Proveedor">Id Proveedor:</label>
-        <input type="text" name="Id_Proveedor" value="{{ producto.Id_Proveedor }}"><br><br>
+        <div class="input-container">
+            <input type="text" name="Id_Proveedor" value="{{ producto.Id_Proveedor }}">
+            <i class="fa-solid fa-id-card"></i>
+        </div><br>
 
         <label for="Nombre_Prod">Nombre Producto:</label>
-        <input type="text" name="Nombre_Prod" value="{{ producto.Nombre_Prod }}"><br><br>
+        <div class="input-container">
+            <input type="text" name="Nombre_Prod" value="{{ producto.Nombre_Prod }}">
+            <i class="fa-solid fa-tag"></i>
+        </div><br>
 
         <label for="Precio">Precio:</label>
-        <input type="text" name="Precio" value="{{ producto.Precio }}"><br><br>
+        <div class="input-container">
+            <input type="text" name="Precio" value="{{ producto.Precio }}">
+            <i class="fa-solid fa-dollar-sign"></i>
+        </div><br>
 
         <label for="Modelo">Modelo:</label>
-        <input type="text" name="Modelo" value="{{ producto.Modelo }}"><br><br>
+        <div class="input-container">
+            <input type="text" name="Modelo" value="{{ producto.Modelo }}">
+            <i class="fa-solid fa-box"></i>
+        </div><br>
 
         <label for="Cantidad">Cantidad:</label>
-        <input type="text" name="Cantidad" value="{{ producto.Cantidad }}"><br><br>
+        <div class="input-container">
+            <input type="text" name="Cantidad" value="{{ producto.Cantidad }}">
+            <i class="fa-solid fa-cubes"></i>
+        </div><br>
 
         <label for="Materiales">Materiales:</label>
-        <input type="text" name="Materiales" value="{{ producto.Materiales }}"><br><br>
+        <div class="input-container">
+            <input type="text" name="Materiales" value="{{ producto.Materiales }}">
+            <i class="fa-solid fa-flask"></i>
+        </div><br>
 
-        <button type="submit">Actualizar Producto</button>
+        <div class="botones-accion">
+            <button type="submit">Guardar</button>    
+            <a href="{{ url_for('verinformacion.ver_inventarios') }}">
+                <button type="button">Regresar</button>
+            </a>
+        </div>
     </form>
-
-    <a href="{{ url_for('verinformacion.ver_inventarios') }}">
-        <button>Regresar</button>
-    </a>
-
-
 </body>
 </html>

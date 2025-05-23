@@ -2,14 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Producto al Inventario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/crearinformacion/inventario.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/all.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>
         function filtrarProductos() {
             let input = document.getElementById("buscar_producto").value.toLowerCase();
-            
             let opcionesProveedor = document.getElementById("Id_Proveedor").options;
-            
-           
 
             // Filtrar las opciones de Id de Proveedor
             for (let i = 0; i < opcionesProveedor.length; i++) {
@@ -20,57 +21,69 @@
     </script>
 </head>
 <body>
-    <h2>Ingresar Producto al Inventario</h2>
+    <h1>Ingresar Producto al Inventario</h1>
     <form method="POST">
-        
-        
-        <!-- Select para el Código del Producto -->
-        <label>Código del Producto:</label>
-        <input type="number" name="Código_Prod" id="Código_Prod" required><br>
-        
-        <!-- Buscador para Código de Producto y Proveedor -->
-        <label>Buscar Producto o Proveedor:</label>
-        <input type="text" id="buscar_producto" onkeyup="filtrarProductos()" placeholder="Escriba para buscar...">
-        <br>
+        <label for="Código_Prod">Código del Producto:</label>
+        <div class="input-container">
+            <input type="number" name="Código_Prod" id="Código_Prod" required placeholder="Ingrese codigo del producto">
+            <i class="fa-solid fa-barcode"></i>
+        </div><br>
 
-        <!-- Select para el Id del Proveedor -->
-        <label>ID Proveedor:</label>
-        <select name="Id_Proveedor" id="Id_Proveedor" required>
-            <option value="" disabled selected>Seleccione un proveedor</option>
-            {% for proveedor in proveedores %}
-                <option value="{{ proveedor.Id_Proveedor }}">
-                    {{ proveedor.Id_Proveedor }} - {{ proveedor.Nombre_Prov }}
-                </option>
-            {% endfor %}
-        </select>
-        <br>
-        
-        <!-- Nombre del Producto -->
-        <label>Nombre del Producto:</label>
-        <input type="text" name="Nombre_Prod" id="Nombre_Prod" required><br>
-    
-        <!-- Precio del Producto -->
-        <label>Precio:</label>
-        <input type="number" step="0.01" name="Precio" id="Precio" required><br>
-    
-        <!-- Modelo del Producto -->
-        <label>Modelo:</label>
-        <input type="text" name="Modelo" id="Modelo" required><br>
-    
-        <!-- Cantidad -->
-        <label>Cantidad:</label>
-        <input type="number" name="Cantidad" id="Cantidad" required><br>
-    
-        <!-- Materiales -->
-        <label>Materiales:</label>
-        <input type="text" name="Materiales" id="Materiales" required><br>
-    
-        <button type="submit">Guardar</button>
+        <label for="buscar_producto">Buscar Producto o Proveedor:</label>
+        <div class="input-container">
+            <input type="text" id="buscar_producto" onkeyup="filtrarProductos()" placeholder="Escriba para buscar...">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div><br>
+
+        <label for="Id_Proveedor">ID Proveedor:</label>
+        <div class="input-container">
+            <select name="Id_Proveedor" id="Id_Proveedor" required>
+                <option value="" disabled selected>Seleccione un proveedor</option>
+                {% for proveedor in proveedores %}
+                    <option value="{{ proveedor.Id_Proveedor }}">
+                        {{ proveedor.Id_Proveedor }} - {{ proveedor.Nombre_Prov }}
+                    </option>
+                {% endfor %}
+            </select>
+            <i class="fa-solid fa-barcode"></i>
+        </div><br>
+
+        <label for="Nombre_Prod">Nombre del Producto:</label>
+        <div class="input-container">
+            <input type="text" name="Nombre_Prod" id="Nombre_Prod" required placeholder="Ingrese el nombre del producto">
+            <i class="fa-solid fa-signature"></i>
+        </div><br>
+
+        <label for="Precio">Precio:</label>
+        <div class="input-container">
+            <input type="number" step="0.01" name="Precio" id="Precio" required placeholder="Ingrese el precio del producto">
+            <i class="fa-solid fa-money-bill"></i>
+        </div><br>
+
+        <label for="Modelo">Modelo:</label>
+        <div class="input-container">
+            <input type="text" name="Modelo" id="Modelo" required placeholder="Ingrese el modelo del producto">
+            <i class="fa-solid fa-barcode"></i>
+        </div><br>
+
+        <label for="Cantidad">Cantidad:</label>
+        <div class="input-container">
+            <input type="number" name="Cantidad" id="Cantidad" required placeholder="Ingrese la cantidad existente">
+            <i class="fa-solid fa-hashtag"></i>
+        </div><br>
+
+        <label for="Materiales">Materiales:</label>
+        <div class="input-container">
+            <input type="text" name="Materiales" id="Materiales" required placeholder="Ingrese los materiales de los que esta hecho el producto">
+            <i class="fa-solid fa-hammer"></i>
+        </div><br>
+
+        <div class="botones-accion">
+            <button type="submit">Guardar</button>
+            <a href="{{ url_for('verinformacion.ver_inventarios') }}">
+                <button type="button">Regresar</button>
+            </a>
+        </div>
     </form>
-
-    <a href="{{ url_for('verinformacion.ver_inventarios') }}">
-        <button>Regresar</button>
-    </a>
-    
 </body>
 </html>

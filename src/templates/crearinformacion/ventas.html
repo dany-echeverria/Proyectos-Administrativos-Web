@@ -3,67 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <title>Registrar Venta</title>
-    <script>
-        function filtrarPacientes() {
-        let input = document.getElementById("buscar_paciente").value.toLowerCase();
-        let opciones = document.getElementById("Id_Paciente").options;
-        
-        for (let i = 0; i < opciones.length; i++) {
-            let texto = opciones[i].text.toLowerCase(); // Aquí estamos buscando en ID y nombre
-
-            // Filtramos las opciones basadas en el ID o el nombre
-            if (texto.includes(input)) {
-                opciones[i].style.display = "";  // Mostrar opción si el texto coincide
-            } else {
-                opciones[i].style.display = "none";  // Ocultar opción si el texto no coincide
-            }
-        }
-    }
-    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/crearinformacion/ventas.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/all.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <h2>Ingresar Venta</h2>
-    <form method="POST">
-        <label>Buscar Paciente:</label>
-        <input type="text" id="buscar_paciente" onkeyup="filtrarPacientes()" placeholder="Escriba para buscar...">
-        <br>
+    <main class="main-container">
+        <h1 class="page-title">Ingresar Venta</h1>
+        <form method="POST">
+        
+            <div class="inputs" id="inputsContainer">
+                <!-- Buscar paciente -->
+                <label for="buscar_paciente">Buscar Paciente:</label>
+                <div class="input-container">
+                    <input type="text" id="buscar_paciente" onkeyup="filtrarPacientes()" placeholder="Escriba para buscar...">
+                    <i class="fa-solid fa-search"></i>
+                </div>
+                <br>
+            
+                <!-- Select paciente -->
+                <label for="Id_Paciente">Id Paciente:</label>
+                <div class="input-container">
+                    <select name="Id_Paciente" id="Id_Paciente" required>
+                        <option value="" selected disabled>-- Selecciona una opción --</option>
+                        {% for paciente in pacientes %}
+                            <option value="{{ paciente.Id_Paciente }}">{{ paciente.Id_Paciente }} - {{ paciente.Nombre_Pa }} {{ paciente.Apellidos }}</option>
+                        {% endfor %}
+                    </select>
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <br>
 
-        <label>Id Paciente:</label>
-<select name="Id_Paciente" id="Id_Paciente" required>
-    <option value="" disabled selected>Seleccione un paciente</option>
-    {% for paciente in pacientes %}
-    <option value="{{ paciente.Id_Paciente }}">
-        {{ paciente.Id_Paciente }} - {{ paciente.Nombre_Pa }} {{ paciente.Apellidos }}
-    </option>
+                <!-- Tratamientos -->
+                <div id="tratamientosContainer">
+                    <label for="Tratamiento">Tratamiento (producto):</label>
+                    <div class="input-container tratamiento-item">
+                        <div class="tratamientoSelect-container">
+                            <select class="tratamiento" name="Tratamiento" onchange="actualizarAdeudo()" required >
+                                <option value="" selected disabled>-- Selecciona una opción --</option>
+                                {% for producto in inventarios %}
+                                    <option value="{{ producto.Nombre_Prod }}" data-precio="{{ producto.Precio }}">
+                                        {{ producto.Nombre_Prod }} - ${{ producto.Precio }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <button  class="btn-eliminarTratamiento" onclick="eliminarTratamientosContainer()" title="Eliminar tratamiento">
+                                <i class="fa-solid fa-trash icon-trash"></i>
+                            </button>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                <button id="btnAgregarTratamiento" type="button" onclick="agregarTratamiento()" class="btn-agregarTratamiento">Agregar tratamiento</button><br><br>
+
+                <label for="observaciones">Observaciones:</label>
+                <div class="input-container">
+                    <input type="text"  name="observaciones" id="observaciones" >
+                    <i class="fa-solid fa-dollar-sign"></i>
+                </div>
+                <br>
+                
+                <!-- Adeudo y Anticipo -->
+                <label for="Adeudo">Adeudo:</label>
+                <div class="input-container">
+                    <input type="number" step="0.01" name="Adeudo" id="Adeudo" readonly>
+                    <i class="fa-solid fa-dollar-sign"></i>
+                </div>
+                
+                <br>
+
+                <div id="mensajeCambio" style="color: red; font-weight: bold;"></div>
+
+                <label for="Anticipo">Anticipo:</label>
+                <div class="input-container">
+                    <input type="number" step="0.01" name="Anticipo" id="Anticipo" oninput="actualizarAdeudo()" required>
+                    <i class="fa-solid fa-credit-card"></i>
+                </div>
+                <br>
+
+                <!-- Información adicional -->
+                <label for="graduacion_ojo_derecho">Graduación ojo derecho</label>
+                <div class="input-container">
+                    <input type="text" name="graduacion_ojo_derecho" required>
+                    <i class="fa-solid fa-eye"></i>
+                </div>
+                <br>
+            
+                <label for="graduacion_ojo_izquierdo">Graduación ojo izquierdo</label>
+                <div class="input-container">
+                    <input type="text" name="graduacion_ojo_izquierdo" required>
+                    <i class="fa-solid fa-eye"></i>
+                </div>
+                <br>
+            
+            
+                <label for="Armason">Armazón:</label>
+                <div class="input-container">
+                    <input type="text" name="Armason" required>
+                    <i class="fa-solid fa-cube"></i>
+                </div>
+                <br>
+
+                <div class="fechas-container">
+                    <div class="input-container fecha-container">
+                        <label for="FechaVenta">Fecha de venta:</label>
+                        <input type="date" name="FechaVenta" required>
+                    </div>
+                    <br>
     
-    {% endfor %}
-</select>
-        <br>
+                    
+                    <div class="input-container fecha-container">
+                        <label for="FechaEntrega">Fecha de entrega:</label>
+                        <input type="date" name="FechaEntrega">
+                    </div>
+                    <br>
+                </div>
+                
+            </div>
+            
+        
+            <!-- Botones -->
+            <div class="botones-accion">
+                <button type="submit">Guardar</button>
+                <a href="{{ url_for('verinformacion.ver_ventas') }}">
+                    <button type="button">Regresar</button>
+                </a>
+            </div>
+        </form>
+    </main>
+    
+    <script>
+        function filtrarPacientes() {
+            const input = document.getElementById("buscar_paciente").value.toLowerCase();
+            const options = document.getElementById("Id_Paciente").options;
+            for (let i = 0; i < options.length; i++) {
+                let texto = options[i].text.toLowerCase();
+                options[i].style.display = texto.includes(input) ? "" : "none";
+            }
+        }
+        
+        function agregarTratamiento() {
+            const container = document.getElementById("tratamientosContainer");
+            
+            if (!container){
+                const inputsContainer = document.getElementById("inputsContainer");
+                const tratamientosContainer = document.createElement("div");
+                const btnAgregarTratamiento = document.getElementById("btnAgregarTratamiento");
 
-        <label>Graduación ojo derecho</label>
-        <input type="text" name="graduacion_ojo_derecho" id="graduacion_ojo_derecho" required><br>
+                tratamientosContainer.id="tratamientosContainer";
+                inputsContainer.insertBefore(tratamientosContainer,btnAgregarTratamiento);
+            }
 
-        <label>Graduación ojo izquierdo</label>
-        <input type="text" name="graduacion_ojo_izquierdo" id="graduacion_ojo_izquierdo" required><br>
+            const contenedor = document.getElementById("tratamientosContainer");
+
+            const label = document.createElement("label");
+            label.for = "Tratamiento"
+            label.innerHTML = "Tratamiento (producto):";
+
+            const div = document.createElement("div");
+            div.className = "input-container tratamiento-item tratamiento-extra";
+            
+            // Crear el <select>
+            const select = document.createElement("select");
+            select.className = "tratamiento";
+            select.name = "Tratamiento";
+            select.required = true;
+            select.setAttribute("onchange", "actualizarAdeudo()");
+
+            // Crear la opción por defecto
+            const opcionDefecto = document.createElement("option");
+            opcionDefecto.value = "";
+            opcionDefecto.disabled = true;
+            opcionDefecto.selected = true;
+            opcionDefecto.textContent = "-- Selecciona una opción --";
+            select.appendChild(opcionDefecto);
+            
+            const invTratamientos = JSON.parse('{{ invSerializado | tojson | safe }}');
+
+            // Agregar opciones dinámicamente
+            invTratamientos.forEach(producto => {
+            const opcion = document.createElement("option");
+            opcion.value = producto.Nombre_Prod;
+            opcion.setAttribute("data-precio", producto.Precio);
+            opcion.textContent = `${producto.Nombre_Prod} - $${producto.Precio}`;
+            select.appendChild(opcion);
+            });
+
+            const btnEliminar = document.createElement("button");
+            btnEliminar.type = "button";
+            btnEliminar.className = "btn-eliminarTratamientoExtra btn-eliminarTratamiento";
+
+            if(document.querySelectorAll("div.tratamiento-item").length === 0) {
+                btnEliminar.innerHTML = "<i class='fa-solid fa-trash icon-trash'></i>";
+                btnEliminar.onclick = function() {
+                    eliminarTratamientosContainer();
+                };
+            }
+            else {
+                btnEliminar.innerHTML = "<i class='fa-solid fa-minus icon-trash'></i>";
+                btnEliminar.onclick = function() {
+                    eliminarTratamiento(this);
+                };
+            }
 
 
-        <label>Armazón:</label>
-        <input type="text" name="Armason" id="Armason" required><br>
+            div.appendChild(select);
+            div.appendChild(btnEliminar);
+            contenedor.appendChild(div);
+            if(document.querySelectorAll("div.tratamiento-item").length === 1) {
+                contenedor.insertBefore(label,div);
+            }
+        }
 
-        <label>Tratamiento:</label>
-        <input type="text" name="Tratamiento" id="Tratamiento" required><br>
+        function eliminarTratamiento(button) {
+            button.parentElement.remove();
+            actualizarAdeudo();
+        }
+        function eliminarTratamientosContainer(){
+            let containerTratamientos = document.getElementById("tratamientosContainer");
+            containerTratamientos.remove();
+        }
 
-        <label>Anticipo:</label>
-        <input type="number" step="0.01" name="Anticipo" id="Anticipo" required><br>
+        function actualizarAdeudo() {
+            let adeudo = 0;
+            const tratamientos = document.querySelectorAll(".tratamiento");
+            tratamientos.forEach(function(select) {
+                const precio = parseFloat(select.options[select.selectedIndex]?.getAttribute("data-precio"));
+                if (!isNaN(precio)) {
+                    adeudo += precio;
+                }
+            });
 
-        <label>Adeudo:</label>
-        <input type="number" step="0.01" name="Adeudo" id="Adeudo" required><br>
+            const anticipo = parseFloat(document.getElementById("Anticipo").value) || 0;
+            const adeudoFinal = adeudo - anticipo;
+            const adeudoInput = document.getElementById("Adeudo");
 
-        <label>Fecha:</label>
-        <input type="date" name="Fecha" id="Fecha" required><br>
+            // Crear o seleccionar el mensaje de cambio
+            let mensajeCambio = document.getElementById("mensajeCambio");
+            if (!mensajeCambio) {
+                mensajeCambio = document.createElement("div");
+                mensajeCambio.id = "mensajeCambio";
+                mensajeCambio.style.color = "red";
+                mensajeCambio.style.fontWeight = "bold";
+                adeudoInput.parentElement.appendChild(mensajeCambio);
+            }
 
-        <button type="submit">Guardar</button>
-    </form>
-    <a href="{{ url_for('verinformacion.ver_ventas') }}">Regresar</a>
+            if (adeudoFinal <= 0) {
+                adeudoInput.value = "0.00";
+                if (anticipo > adeudo) {
+                    const cambio = (anticipo - adeudo).toFixed(2);
+                    mensajeCambio.textContent = `Cambio a entregar: $${cambio}`;
+                } else {
+                    mensajeCambio.textContent = "";
+                }
+            } else {
+                adeudoInput.value = adeudoFinal.toFixed(2);
+                mensajeCambio.textContent = "";
+            }
+        }
+
+    </script>
 </body>
 </html>

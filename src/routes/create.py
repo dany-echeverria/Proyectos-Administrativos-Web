@@ -9,19 +9,22 @@ create_bp = Blueprint('create', __name__, url_prefix='/crear')
 @create_bp.route('/agregar_remesa', methods=['GET', 'POST'])
 def agregar_remesa():
     if request.method == 'POST':
-        # Obtener datos del formulario con los nombres correctos
-        Proveedor = request.form['Id_Proveedor']
-        CodigoElemento = request.form['Id_Producto']
-        Modelo = request.form['modelo']
-        Nombre = request.form['nombre']
-        Num_Entradas = request.form['num_entradas']
-        Factura = request.form['factura']
-        Fecha = request.form['fecha']
+        # Recuperar datos del formulario
+        id_proveedor = request.form.get('Id_Proveedor')  # Proveedor seleccionado
+        Código_Prod = request.form.get('Id_Producto')  # Producto seleccionado
+        Modelo = request.form.get('modelo')
+        Nombre = request.form.get('nombre')
+        Num_Entradas = request.form.get('num_entradas')
+        Factura = request.form.get('factura')
+        Fecha = request.form.get('fecha')
 
-        # Crear una nueva instancia de Remesa
+        # Buscar el proveedor y producto en la base de datos usando sus IDs
+        proveedor = Proveedores.query.get(id_proveedor)
+
+        
         nueva_remesa = Remesa(
-            Proveedor=Proveedor,
-            CodigoElemento=CodigoElemento,
+            Id_Proveedor=proveedor.Id_Proveedor,  # Relacionamos la remesa con el proveedor
+            Código_Prod=Código_Prod,        # Relacionamos la remesa con el producto
             Modelo=Modelo,
             Nombre=Nombre,
             Num_Entradas=Num_Entradas,
@@ -29,17 +32,16 @@ def agregar_remesa():
             Fecha=Fecha
         )
 
-        # Agregar a la base de datos
+            # Guardar la remesa en la base de datos
         db.session.add(nueva_remesa)
         db.session.commit()
 
-        # Redirigir con mensaje de éxito
-        flash('Remesa agregada con éxito', 'success')
-        return redirect(url_for('create.agregar_remesa'))
+        return redirect(url_for('verinformacion.ver_remesas'))  # Redirigir a la página de remesas
 
-    # Obtener datos para desplegar en el formulario
+    # Obtener la lista de proveedores y productos para llenar los dropdowns
     proveedores = Proveedores.query.all()
     inventarios = Inventario.query.all()
+
     return render_template('crearinformacion/remesa.html', proveedores=proveedores, inventarios=inventarios)
 
 
@@ -87,7 +89,6 @@ def agregar_proveedor():
     if request.method == 'POST':
         # Obtener datos del formulario
         Id_Proveedor = request.form['Id_Proveedor']
-        Código_Prod = request.form['Código_Prod']
         Nombre_Prov = request.form['Nombre_Prov']
         Correo = request.form['Correo']
         Dirección = request.form['Dirección']
@@ -96,7 +97,6 @@ def agregar_proveedor():
         # Crear una nueva instancia de Proveedor
         nuevo_proveedor = Proveedores(
             Id_Proveedor=Id_Proveedor,
-            Código_Prod=Código_Prod,
             Nombre_Prov=Nombre_Prov,
             Correo=Correo,
             Dirección=Dirección,
@@ -127,7 +127,9 @@ def agregar_venta():
         Tratamiento = request.form['Tratamiento']
         Anticipo = request.form['Anticipo']
         Adeudo = request.form['Adeudo']
-        Fecha = request.form['Fecha']
+        FechaVenta = request.form['FechaVenta']
+        FechaEntrega = request.form['FechaEntrega']
+
 
         # Crear una nueva instancia de Venta
         nueva_venta = Ventas(
@@ -138,7 +140,8 @@ def agregar_venta():
             Tratamiento=Tratamiento,
             Anticipo=Anticipo,
             Adeudo=Adeudo,
-            Fecha=Fecha
+            FechaVenta=FechaVenta,
+            FechaEntrega=FechaEntrega,
         )
 
         # Agregar la nueva venta a la base de datos
@@ -150,7 +153,12 @@ def agregar_venta():
 
     # Obtener la lista de pacientes desde la base de datos
     pacientes = db.session.query(Paciente).all()  
-    return render_template('crearinformacion/ventas.html', pacientes=pacientes)
+    inventarios = Inventario.query.all()
+    
+    invSerializado = [{"Nombre_Prod": i.Nombre_Prod, "Precio": i.Precio} for i in inventarios]
+    
+    return render_template('crearinformacion/ventas.html', pacientes=pacientes, inventarios=inventarios, invSerializado = invSerializado)
+
 
 
 # Ruta para agregar pago
@@ -158,36 +166,52 @@ def agregar_venta():
 def agregar_pago():
     pacientes = Paciente.query.all()
     ventas = Ventas.query.all()
+    ventas_json = [
+        {
+            "Id_Venta": v.Id_venta,
+            "Id_Paciente": v.Id_Paciente,
+            "Adeudo": float(v.Adeudo)
+        }
+        for v in ventas
+    ]
 
     if request.method == 'POST':
-        # Obtener datos del formulario
-        Id_Pago = request.form['Id_Pago']
         Id_Paciente = request.form['Id_Paciente']
         Id_Venta = request.form['Id_Venta']
-        SaldoAPagar = request.form['SaldoAPagar']
-        Abono = request.form['Abono']
-        SaldoActual = request.form['SaldoActual']
+        SaldoAPagar = float(request.form['SaldoAPagar'])
+        Abono = float(request.form['Abono'])
         Fecha = request.form['Fecha']
+        ProductoEntregado = 'ProductoEntregado' in request.form
 
-        # Crear una nueva instancia de Pago
-        nueva_pago = Pagos(
-            Id_Pago=Id_Pago,
+
+        SaldoActual = SaldoAPagar - Abono
+        if SaldoActual < 0:
+            flash('Error: El abono no puede ser mayor al saldo a pagar.', 'danger')
+            return redirect(url_for('create.agregar_pago'))
+
+        nuevo_pago = Pagos(
             Id_Paciente=Id_Paciente,
             Id_Venta=Id_Venta,
             SaldoAPagar=SaldoAPagar,
             Abono=Abono,
             SaldoActual=SaldoActual,
-            Fecha=Fecha
+            Fecha=Fecha,
+            ProductoEntregado=ProductoEntregado
         )
 
-        # Agregar el nuevo pago a la base de datos
-        db.session.add(nueva_pago)
-        db.session.commit()
+        db.session.add(nuevo_pago)
 
+        venta = Ventas.query.get(Id_Venta)
+        if venta:
+            venta.Adeudo = SaldoActual
+
+        db.session.commit()
         flash('Pago agregado con éxito', 'success')
         return redirect(url_for('create.agregar_pago'))
 
-    return render_template('crearinformacion/pagos.html', pacientes=pacientes, ventas=ventas)
+    return render_template('crearinformacion/pagos.html', pacientes=pacientes, ventas=ventas, ventas_json=ventas_json)
+
+
 
 
 # Ruta para agregar paciente

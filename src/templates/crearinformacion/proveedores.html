@@ -2,40 +2,63 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Proveedor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/crearinformacion/proveedores.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/all.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <h2>Ingresar Proveedor</h2>
-    <form method="POST">
-        
-        <label>Id del rpoveddor:</label>
-        <input type="number" name="Id_Proveedor" id="Id_Proveedor" required><br>
-        <!-- Código del Producto relacionado con el proveedor -->
-        <label>Código del Producto:</label>
-        <input type="number" name="Código_Prod" id="Código_Prod" required><br>
-    
-        <!-- Nombre del Proveedor -->
-        <label>Nombre del Proveedor:</label>
-        <input type="text" name="Nombre_Prov" id="Nombre_Prov" required><br>
-    
-        <!-- Correo del Proveedor -->
-        <label>Correo:</label>
-        <input type="email" name="Correo" id="Correo" required><br>
-    
-        <!-- Dirección del Proveedor -->
-        <label>Dirección:</label>
-        <input type="text" name="Dirección" id="Dirección" required><br>
-    
-        <!-- Teléfono del Proveedor -->
-        <label>Teléfono:</label>
-        <input type="text" name="Teléfono" id="Teléfono" required><br>
-    
-        <button type="submit">Guardar</button>
-    </form>
 
-    <a href="{{ url_for('verinformacion.ver_proveedores') }}">
-        <button>Regresar</button>
-    </a>
-    
+    <main class="main-container">
+        <h1 class="page-title">Agregar Proveedor</h1>
+
+        <form method="POST">
+
+            <label for="Id_Proveedor">ID Proveedor:</label>
+            <div class="input-container">
+                <input type="number" name="Id_Proveedor" id="Id_Proveedor" required>
+                <i class="fa-solid fa-id-badge"></i>
+            </div>
+            <br>
+
+
+            <label for="Nombre_Prov">Nombre:</label>
+            <div class="input-container">
+                <input type="text" name="Nombre_Prov" id="Nombre_Prov" required>
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <br>
+
+            <label for="Correo">Correo:</label>
+            <div class="input-container">
+                <input type="email" name="Correo" id="Correo" required>
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+            <br>
+
+            <label for="Dirección">Dirección:</label>
+            <div class="input-container">
+                <input type="text" name="Dirección" id="Dirección" required>
+                <i class="fa-solid fa-map-marker-alt"></i>
+            </div>
+            <br>
+
+            <label for="Teléfono">Teléfono:</label>
+            <div class="input-container">
+                <input type="text" name="Teléfono" id="Teléfono" required>
+                <i class="fa-solid fa-phone"></i>
+            </div>
+            <br>
+
+            <div class="botones-accion">
+                <button type="submit">Guardar</button>
+                <a href="{{ url_for('verinformacion.ver_proveedores') }}">
+                    <button type="button">Regresar</button>
+                </a>
+            </div>
+        </form>
+    </main>
+
 </body>
 </html>

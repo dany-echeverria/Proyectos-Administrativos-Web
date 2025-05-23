@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body {
+    height: 100vh;
+}
+
+/* DISEÑO DE NAVBAR GENERAL (GRANDE) */
+.navbar {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: #fff;
+    width: 200px;
+    border: solid #28469C 1px;
+    border-radius: 0 15px 15px 0;
+    height: 100%;
+    transition: width .3s ease ;
+
+}
+.nav-logo {
+    display: flex;
+    position: relative;
+    justify-content: left;
+    align-items: center;
+    font-family: 'Montserrat';
+    color: #28469C;
+    width: 100%;
+    margin-top: 18px;
+    margin-left: 10px;
+}
+.nav-logo::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -14px;
+    left: 12px;
+    background-color: #28469C;
+    width: 74%;
+    height: 1px;
+}
+.nav-img-logo {
+    width: 48px;
+    height: 48px;
+}
+.fondo-img-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    background-color: #c47f7f;
+    border: 2px solid #BC534D;
+    margin-left: 12px;
+}
+.nav-titulo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 12px;
+}
+.nav-titulo1, .nav-titulo2 {
+    font-size: 14px;
+}
+.nav-titulo1 {
+    font-weight: 500;
+    text-transform: uppercase;
+}
+.nav-titulo2 {
+    font-weight: 300;
+    text-transform: uppercase;
+}
+
+/* BUTTONS NAVBAR */
+.nav-buttons {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-around;
+    list-style: none;
+    margin: 20px 0 0 24px;
+    transition: width .5s ease;
+    
+}
+.nav-btn {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    max-width: 84%;
+    height: 40px;
+    border-radius: 14px;
+    transition: max-width .3s ease;
+}
+.nav-btn > a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #000000;
+    font-family: 'Poppins';
+    font-size: 14px;
+    margin-left: 12px;
+    transition: .2s ease;
+}
+.nav-btn > a:hover {
+    color: #28469C;
+}
+.nav-btn > a > i {
+    text-align: center;
+    margin-right: 8px;
+    font-size: 18px;
+}
+
+/* "nav-btn-active" es la CLASE QUE SE DARÁ CUANDO ESTES ACTIVO EN LA PÁGINA*/
+/* LO TENDRÁ UN ELEMENTO A LA VEZ */
+.nav-btn-active > a{
+    color: #28469C;
+}
+.nav-btn-active {
+    background-color: #C4DAFA;
+}
+
+/* CERRAR SESIÓN */
+.link-cerrarSesion {
+    display: flex;
+    justify-content: center;
+}
+.btn-cerrarSesion {
+    height: 38px;
+    width: 38px;
+    margin: 0px 0 30px 0;
+    background-color: #C4DAFA;
+    border: 1px solid #28469C;
+    border-radius: 100px;
+    box-shadow: 1px 1px 5px #28469C;
+    transition: .3s;
+    cursor: pointer;
+}
+.btn-cerrarSesion:hover{
+    box-shadow: 2px 2px 5px #28469C;
+    transform: scale(1.01);
+}
+.btn-cerrarSesion > i {
+    color: #28469C;
+}
+
+
+/* DISEÑO DE NAVBAR PEQUEÑA */
+.navbar-hidden {
+    width: 80px;
+    border: solid #28469C 1px;
+}
+.navbar-hidden .nav-logo {
+    width: 100%;
+    margin-top: 18px;
+    margin-left: 6px;
+}
+.navbar-hidden .nav-logo::after {
+    background-color: #28469C;
+    width: 55%;
+}
+.navbar-hidden .nav-logo .nav-titulo {
+    display: none;
+}
+.navbar-hidden .nav-buttons {
+    margin: 20px 0 0 18px;
+}
+.navbar-hidden .nav-btn {
+    max-width: 40px;
+    height: 40px;
+}
+.navbar-hidden .nav-btn a{
+    margin: 0 100% 0 12px;
+}
+.navbar-hidden .nav-btn a i {
+    margin: 0;
+}
+.navbar-hidden .nav-buttons .nav-btn .nav-btn-texto {
+    opacity: 0;
+}
+
+.navbar {
+    position: fixed;
+    z-index: 10;
+}

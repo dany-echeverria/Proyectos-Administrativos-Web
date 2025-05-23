@@ -2,97 +2,155 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Pago</title>
-    <style>
-        .search-container {
-            margin-bottom: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/crearinformacion/pagos.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/all.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <h2>Ingresar Pago</h2>
-    <form method="POST">
-        <label>Id_Pago</label>
-        <input type="number" name="Id_Pago" id="Id_Pago" required><br>
 
-        <label>Id_Paciente</label>
-        <div class="search-container">
-            <input type="text" id="searchPaciente" placeholder="Buscar Paciente" onkeyup="filterPaciente()">
-            <select name="Id_Paciente" id="Id_Paciente" required>
-                <!-- Aquí se generarán los pacientes disponibles -->
-                {% for paciente in pacientes %}
-                    <option value="{{ paciente.Id_Paciente }}">{{ paciente.Id_Paciente }} - {{ paciente.Nombre_Pa }} {{ paciente.Apellidos }}</option>
-                {% endfor %}
-            </select>
-        </div>
+    <main class="main-container">
+        <h1 class="page-title">Registrar Pago</h1>
+
         
-        <br>
 
-        <label>Id_Venta</label>
-        <div class="search-container">
-            <input type="text" id="searchVenta" placeholder="Buscar Venta" onkeyup="filterVenta()">
-            <select name="Id_Venta" id="Id_Venta" required>
-                <!-- Aquí se generarán las ventas disponibles -->
-                {% for venta in ventas %}
-                    <option value="{{ venta.Id_venta }}">{{ venta.Id_venta }} - {{ venta.Tratamiento }} ({{ venta.Anticipo }})</option>
-                {% endfor %}
-            </select>
-        </div>
-        <br>
+        <form method="POST">
 
-        <label>SaldoAPagar</label>
-        <input type="number" name="SaldoAPagar" id="SaldoAPagar" required><br>
+            <div class="form-group">
 
-        <label>Abono</label>
-        <input type="number" name="Abono" id="Abono" required><br>
+                <label for="buscar_paciente">Buscar Paciente:</label>
+                <div class="input-container">
+                    <input type="text" id="buscar_paciente" onkeyup="filtrarPacientes()" placeholder="Escriba para buscar...">
+                    <i class="fa-solid fa-search"></i>
+                </div>
+                <br>
 
-        <label>SaldoActual</label>
-        <input type="number" name="SaldoActual" id="SaldoActual" required><br>
+                <label for="Id_Paciente">Paciente:</label>
+                <div class="input-container">
+                    <select name="Id_Paciente" id="Id_Paciente" required onchange="cargarVentas()">
+                        <option value="">Selecciona un paciente</option>
+                        {% for p in pacientes %}
+                        <option value="{{ p.Id_Paciente }}">{{ p.Nombre_Pa }} {{ p.Apellidos }}</option>
+                        {% endfor %}
+                    </select>
+                    <i class="fa-solid fa-id-card"></i>
+                </div>
+            </div>
 
-        <label>Fecha</label>
-        <input type="date" name="Fecha" id="Fecha" required><br>  <!-- Cambié el nombre a Id_Proveedor -->
+            <div class="form-group">
+                <label for="Id_Venta">Venta:</label>
+                <div class="input-container">
+                    <select name="Id_Venta" id="Id_Venta" required onchange="actualizarSaldo()">
+                        <option value="">Selecciona una venta</option>
+                    </select>
+                    <i class="fa-solid fa-money-bill"></i>
+                </div>
+            </div>
 
-        <button type="submit">Guardar</button>
-    </form>
+            <div class="form-group">
+                <label for="SaldoAPagar">Saldo a Pagar:</label>
+                <div class="input-container">
+                    <input type="number" step="0.01" name="SaldoAPagar" id="SaldoAPagar" readonly>
+                    <i class="fa-solid fa-dollar-sign"></i>
+                </div>
+            </div>
 
-    <a href="{{ url_for('verinformacion.ver_pagos') }}">
-        <button>Regresar</button>
-    </a>
+            <div class="form-group">
+                <label for="Abono">Abono:</label>
+                <div class="input-container">
+                    <input type="number" step="0.01" name="Abono" id="Abono" oninput="calcularSaldoActual()" required>
+                    <i class="fa-regular fa-money-bill-1"></i>     
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="SaldoActual">Saldo Actual:</label>
+                <div class="input-container">
+                    <input type="number" step="0.01" name="SaldoActual" id="SaldoActual" readonly>
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+            </div>
+
+            <div id="mensajeCambio" style="color: red; font-weight: bold;"></div>
+
+            <div class="inputs-finales">
+                <div class="form-group fecha">
+                    <label for="Fecha" class="label-fecha">Fecha:</label>
+                    <div class="input-container input-fecha">
+                        <input type="date" name="Fecha" required>
+                    </div>
+                </div>
+    
+                <label class="lbl-prodEntregado">
+                    <input type="checkbox" name="ProductoEntregado" value="1" class="chbox-prodEntregado">
+                    Producto entregado
+                </label>
+            </div>
+            
+            <br>
+
+            <div class="botones-accion">
+                <button type="submit">Guardar</button>
+                <a href="{{ url_for('verinformacion.ver_pagos') }}">
+                    <button type="button">Regresar</button>
+                </a>
+            </div>
+
+    </main>
 
     <script>
-        // Función para filtrar pacientes
-        function filterPaciente() {
-            var input = document.getElementById("searchPaciente");
-            var filter = input.value.toLowerCase();
-            var select = document.getElementById("Id_Paciente");
-            var options = select.getElementsByTagName("option");
-            for (var i = 0; i < options.length; i++) {
-                var option = options[i];
-                var txtValue = option.textContent || option.innerText;
-                if (txtValue.toLowerCase().indexOf(filter) > -1) {
-                    option.style.display = "";
-                } else {
-                    option.style.display = "none";
+        const ventasData = JSON.parse('{{ ventas_json | tojson | safe }}');
+
+        function filtrarPacientes() {
+            const input = document.getElementById("buscar_paciente").value.toLowerCase();
+            const options = document.getElementById("Id_Paciente").options;
+            for (let i = 0; i < options.length; i++) {
+                let texto = options[i].text.toLowerCase();
+                options[i].style.display = texto.includes(input) ? "" : "none";
+            }
+        }
+        function cargarVentas() {
+            const pacienteId = document.getElementById("Id_Paciente").value;
+            const ventaSelect = document.getElementById("Id_Venta");
+            ventaSelect.innerHTML = '<option value="">Selecciona una venta</option>';
+
+            ventasData.forEach(v => {
+                if (v.Id_Paciente == pacienteId) {
+                    const opt = document.createElement("option");
+                    opt.value = v.Id_Venta;
+                    opt.textContent = "Venta ID: " + v.Id_Venta + " (Adeudo: $" + v.Adeudo.toFixed(2) + ")";
+                    opt.dataset.adeudo = v.Adeudo;
+                    ventaSelect.appendChild(opt);
                 }
+            });
+        }
+
+        function actualizarSaldo() {
+            const selectedVenta = document.getElementById("Id_Venta").selectedOptions[0];
+            if (selectedVenta) {
+                const adeudo = parseFloat(selectedVenta.dataset.adeudo || 0);
+                document.getElementById("SaldoAPagar").value = adeudo.toFixed(2);
+                calcularSaldoActual();
             }
         }
 
-        // Función para filtrar ventas
-        function filterVenta() {
-            var input = document.getElementById("searchVenta");
-            var filter = input.value.toLowerCase();
-            var select = document.getElementById("Id_Venta");
-            var options = select.getElementsByTagName("option");
-            for (var i = 0; i < options.length; i++) {
-                var option = options[i];
-                var txtValue = option.textContent || option.innerText;
-                if (txtValue.toLowerCase().indexOf(filter) > -1) {
-                    option.style.display = "";
-                } else {
-                    option.style.display = "none";
-                }
+        function calcularSaldoActual() {
+            const saldo = parseFloat(document.getElementById("SaldoAPagar").value) || 0;
+            const abono = parseFloat(document.getElementById("Abono").value) || 0;
+            const mensajeDiv = document.getElementById("mensajeCambio");
+
+            if (abono >= saldo) {
+                document.getElementById("SaldoActual").value = "0.00";
+                const cambio = (abono - saldo).toFixed(2);
+                mensajeDiv.textContent = "¡Pago excedido! Debes dar $" + cambio + " de cambio.";
+            } else {
+                const saldoActual = saldo - abono;
+                document.getElementById("SaldoActual").value = saldoActual.toFixed(2);
+                mensajeDiv.textContent = "";
             }
         }
     </script>
+
 </body>
 </html>

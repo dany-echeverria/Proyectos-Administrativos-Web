@@ -1,6 +1,6 @@
 from flask import Flask, render_template, session, redirect, url_for
-from db import db
 from config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS
+from db import db
 from routes.create import create_bp
 from routes.verinformacion import verinformacion_bp
 from routes.auth import auth_bp
@@ -12,8 +12,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
 app.secret_key = '1234'
 
-# Blueprints
-
+# Registro de blueprints
 app.register_blueprint(create_bp, url_prefix='/crear')
 app.register_blueprint(verinformacion_bp, url_prefix='/ver')
 app.register_blueprint(auth_bp, url_prefix='/auth')
@@ -24,12 +23,14 @@ db.init_app(app)
 
 @app.route('/')
 def home():
+    print("ola")
     return redirect(url_for('auth.login'))
 
-@app.route('/bienvenida')
+
+@app.route('/ver/proveedores')
 def bienvenida():
     if 'usuario' in session:
-        return render_template('inicio.html')  # Página de bienvenida
+        return render_template('proveedores.html')  # Página de bienvenida
     else:
         return redirect(url_for('auth.login'))
 

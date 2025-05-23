@@ -4,43 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proveedores</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/proveedores.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='resources/logo.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/inicio/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/verinformacion/proveedores.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/all.min.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/7f87e90d60.js" crossorigin="anonymous"></script>
 </head>
-<body>
-    <div class="task-bar"></div>
+<body style="display: flex; height: 100vh;">
+    <!-- NAVBAR -->
+    <nav id="fullscreen-menu" class="navbar navbar-hidden">
+        <div class="nav-logo">
+            <span class="fondo-img-logo">
+                <img src="{{ url_for('static', filename='resources/logo.png') }}" class="nav-img-logo" alt="Logo">
+            </span>
+            <span class="nav-titulo">
+                <h2 class="nav-titulo1">Óptica</h2>
+                <h2 class="nav-titulo2">Sima</h2>
+            </span>
+        </div>
+
+        <ul class="nav-buttons">
+            <li class="nav-btn btn-proveedores">
+                <a href="{{ url_for('verinformacion.ver_proveedores') }}">
+                    <i class="fa-solid fa-truck"></i>
+                    <span class="nav-btn-texto">Proveedores</span>
+                </a></li>
+            <li class="nav-btn btn-remesas">
+                <a href="{{ url_for('verinformacion.ver_remesas') }}">
+                    <i class="fa-solid fa-coins"></i>
+                    <span class="nav-btn-texto">Remesas</span>
+                </a></li>
+            <li class="nav-btn btn-ventas">
+                <a href="{{ url_for('verinformacion.ver_ventas') }}">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                    <span class="nav-btn-texto">Ventas</span>
+                </a></li>
+            <li class="nav-btn btn-pacientes">
+                <a href="{{ url_for('verinformacion.ver_pacientes') }}">
+                    <i class="fa-solid fa-users"></i>
+                    <span class="nav-btn-texto">Pacientes</span>
+                </a></li>
+            <li class="nav-btn btn-inventario">
+                <a href="{{ url_for('verinformacion.ver_inventarios') }}">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    <span class="nav-btn-texto">Inventario</span>
+                </a></li>
+            <li class="nav-btn btn-pagos">
+                <a href="{{ url_for('verinformacion.ver_pagos') }}">
+                    <i class="fa-solid fa-cash-register"></i>
+                    <span class="nav-btn-texto">Pagos</span>
+                </a></li>
+        </ul>
+
+        <a href="{{ url_for('auth.login') }}" class="link-cerrarSesion">
+            <button class="btn-cerrarSesion"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </a>
+    </nav>
 
     <main class="main-container">
         <h1 class="page-title">Tabla de Proveedores</h1>
 
-        <div class="input-container">
-            <input type="text" class="search-input" id="searchInput" placeholder="Buscar...">
-            <div class="button-container">
-                <button class="square-button actualizar">Actualizar</button>
-                <a href="{{ url_for('create.agregar_proveedor') }}">
-                    <button>Agregar Proveedor</button>
-                </a>
-                <button class="square-button borrar">Borrar</button>
-                <div class="pagination">
-                    <button class="square-button" id="btnAtras" {% if page == 1 %}disabled{% endif %}>← Atrás</button>
-                    <button class="square-button" id="btnAdelante" {% if page >= total_pages %}disabled{% endif %}>Adelante →</button>
+        <div class="barAndTableContainer">
+            <div class="search-container">
+                <select id="campoBusqueda">
+                    <option value="Nombre_Prov">Nombre del Proveedor</option>
+                    <option value="Correo">Correo</option>
+                    <option value="Dirección">Dirección</option>
+                    <option value="Teléfono"> Teléfono</option>
+                </select>
+
+                <input type="text" id="searchInput" placeholder="Buscar..." class="searchInput">
+
+                <div class="buttons-tools">
+                    <!-- BUTTON BUSCAR -->
+                    <button id="btnBuscar" class="icon-button blue">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    
+                    <!-- BUTTON VER INFO -->
+                    <a href="{{ url_for('verinformacion.ver_proveedores') }}" class="link-button" title="Ver Todo">
+                        <button class="icon-button gray">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </a>
+                    
+                    <!-- BUTTON ACTUALIZAR -->
+                    <button class="icon-button yellow actualizar"><i class="fa fa-sync-alt"></i></button>
+                    
+                    <!-- BUTTON AGREGAR -->
+                    <a href="{{ url_for('create.agregar_proveedor') }}" class="link-button">
+                        <button class="icon-button green" title="Agregar"><i class="fa fa-plus"></i></button>
+                    </a>
+                    
+                    <!-- BUTTON BORRAR -->
+                    <button class="icon-button red borrar" title="Borrar">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                    
+                    <!-- BUTTON ATRAS -->
+                    <button class="icon-button blue" id="btnAtras" {% if page == 1 %}disabled{% endif %}><i class="fa fa-arrow-left"></i></button>
+                    
+                    <!-- BUTTON ADELANTE -->
+                    <button class="icon-button blue" id="btnAdelante" {% if page >= total_pages %}disabled{% endif %}><i class="fa fa-arrow-right"></i></button>
                 </div>
             </div>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Seleccionar</th>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Dirección</th>
-                    <th>Teléfono</th>
-                    <th>Código Producto</th>
-                </tr>
-            </thead>
-            <tbody id="proveedoresTableBody">
-                {% for proveedor in datos %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Seleccionar</th>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Dirección</th>
+                        <th>Teléfono</th>
+                    </tr>
+                </thead>
+                <tbody id="proveedoresTableBody">
+                    {% for proveedor in datos %}
                     <tr>
                         <td><input type="radio" name="selectRow" class="selectRow" data-id="{{ proveedor.Id_Proveedor }}"></td>
                         <td>{{ proveedor.Id_Proveedor }}</td>
@@ -48,105 +129,80 @@
                         <td>{{ proveedor.Correo }}</td>
                         <td>{{ proveedor.Dirección }}</td>
                         <td>{{ proveedor.Teléfono }}</td>
-                        <td>{{ proveedor.Código_Prod }}</td>
                     </tr>
-                {% else %}
+                    {% else %}
                     <tr>
                         <td colspan="7">No hay proveedores disponibles.</td>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </main>
 
-    <a href="{{ url_for('bienvenida') }}">Regresar</a>
 
+    <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", () => {
+            const btnBuscar = document.getElementById("btnBuscar");
             let selectedRow = null;
-
             let currentPage = parseInt("{{ page }}");
             let totalPages = parseInt("{{ total_pages }}");
 
-            document.getElementById("btnAtras").addEventListener("click", function() {
-                if (currentPage > 1) {
-                    window.location.href = `/ver/proveedores?page=${currentPage - 1}`;
-
-                    
+            btnBuscar.addEventListener("click", () => {
+                const campo = document.getElementById("campoBusqueda").value;
+                const valor = document.getElementById("searchInput").value.trim();
+                if (valor !== "") {
+                    window.location.href = `/ver/proveedores?campo=${campo}&valor=${valor}`;
                 }
             });
 
-            document.getElementById("btnAdelante").addEventListener("click", function() {
-                if (currentPage < totalPages) {
-                    window.location.href = `/ver/proveedores?page=${currentPage + 1}`;
 
-                }
+            document.getElementById("btnAtras").addEventListener("click", () => {
+                if (currentPage > 1) window.location.href = `/ver/proveedores?page=${currentPage - 1}`;
+            });
+
+            document.getElementById("btnAdelante").addEventListener("click", () => {
+                if (currentPage < totalPages) window.location.href = `/ver/proveedores?page=${currentPage + 1}`;
             });
 
             document.querySelectorAll(".selectRow").forEach(radio => {
-                radio.addEventListener("change", function() {
-                    if (selectedRow) {
-                        selectedRow.classList.remove("selected");
-                    }
+                radio.addEventListener("change", function () {
+                    if (selectedRow) selectedRow.classList.remove("selected");
                     selectedRow = this.closest("tr");
                     selectedRow.classList.add("selected");
                 });
             });
 
-            document.querySelector(".square-button.actualizar").addEventListener("click", function() {
-                const seleccionado = document.querySelector(".selectRow:checked");
-                if (seleccionado) {
-                    const idProveedor = seleccionado.dataset.id;
+            document.querySelector(".actualizar").addEventListener("click", () => {
+                if (selectedRow) {
+                    const idProveedor = selectedRow.querySelector(".selectRow").dataset.id;
                     window.location.href = `/actualizar/editar_proveedor/${idProveedor}`;
                 } else {
                     alert("Selecciona un proveedor para actualizar.");
                 }
             });
 
-            document.querySelector(".square-button.borrar").addEventListener("click", function() {
-                const seleccionado = document.querySelector(".selectRow:checked");
-                if (seleccionado) {
-                    const idProveedor = seleccionado.dataset.id;  
+            document.querySelector(".borrar").addEventListener("click", () => {
+                if (selectedRow) {
+                    const idProveedor = selectedRow.querySelector(".selectRow").dataset.id;
                     if (confirm("¿Seguro que quieres eliminar este proveedor?")) {
                         fetch(`/eliminar/borrar_proveedor/${idProveedor}`, { method: 'DELETE' })
-                            .then(response => response.json())
+                            .then(res => res.json())
                             .then(data => {
                                 if (data.success) {
                                     alert("Proveedor eliminado con éxito.");
-                                    seleccionado.closest("tr").remove();
+                                    selectedRow.remove();
                                 } else {
                                     alert("Error al eliminar el proveedor.");
                                 }
-                            })
-                            .catch(error => console.error("Error:", error));
+                            });
                     }
                 } else {
                     alert("Selecciona un proveedor para borrar.");
                 }
             });
 
-            // Filtro de búsqueda en la tabla
-            document.querySelector("#searchInput").addEventListener("input", function(event) {
-                const searchTerm = event.target.value.toLowerCase();
-                const rows = document.querySelectorAll("#proveedoresTableBody tr");
-
-                rows.forEach(row => {
-                    const columns = row.querySelectorAll("td");
-                    let match = false;
-
-                    columns.forEach(column => {
-                        if (column.textContent.toLowerCase().includes(searchTerm)) {
-                            match = true;
-                        }
-                    });
-
-                    if (match) {
-                        row.style.display = "";  // Mostrar la fila
-                    } else {
-                        row.style.display = "none";  // Ocultar la fila
-                    }
-                });
-            });
         });
     </script>
 </body>

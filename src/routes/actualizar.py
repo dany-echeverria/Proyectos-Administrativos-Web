@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+
 from models import db, Inventario, Paciente, Pagos, Proveedores, Ventas, Remesa
 
 actualizar_bp = Blueprint("actualizar", __name__)
@@ -48,15 +50,27 @@ def editar_pago(pago_id):
     if request.method == "POST":
         pago.Id_Paciente = request.form["Id_Paciente"]
         pago.Id_Venta = request.form["Id_Venta"]
-        pago.SaldoAPagar = request.form["SaldoAPagar"]
-        pago.Abono = request.form["Abono"]
-        pago.SaldoActual = request.form["SaldoActual"]
+        pago.SaldoAPagar = float(request.form["SaldoAPagar"])
+        pago.Abono = float(request.form["Abono"])
         pago.Fecha = request.form["Fecha"]
 
+        pago.SaldoActual = pago.SaldoAPagar - pago.Abono
+
+        if pago.SaldoActual < 0:
+            flash('Error: El abono no puede ser mayor al saldo a pagar.', 'danger')
+            return redirect(url_for("actualizar.editar_pago", pago_id=pago_id))
+
+        # También actualizamos la venta
+        venta = Ventas.query.get(pago.Id_Venta)
+        if venta:
+            venta.Adeudo = pago.SaldoActual
+
         db.session.commit()
+        flash('Pago actualizado correctamente', 'success')
         return redirect(url_for("verinformacion.ver_pagos"))
 
     return render_template("actualizarinformacion/pagos.html", pago=pago)
+
 
 
 
@@ -68,11 +82,11 @@ def actualizar_proveedor(id):
         return "Proveedor no encontrado", 404
 
     if request.method == "POST":
-        proveedor.Nombre_Prov = request.form["nombre"]
+
+        proveedor.Nombre_Prov = request.form["Nombre_Prov"]
         proveedor.Correo = request.form["correo"]
         proveedor.Dirección = request.form["direccion"]
         proveedor.Teléfono = request.form["telefono"]
-        proveedor.Código_Prod = request.form["producto"]
 
         db.session.commit()
         return redirect(url_for("verinformacion.ver_proveedores"))
@@ -98,7 +112,8 @@ def editar_venta(id):
         venta.Tratamiento = request.form["Tratamiento"]
         venta.Anticipo = request.form["Anticipo"]
         venta.Adeudo = request.form["Adeudo"]
-        venta.Fecha = request.form["Fecha"]
+        venta.FechaEntrega = request.form["FechaEntrega"]
+        venta.FechaVenta = request.form["FechaVenta"]
 
         db.session.commit()
         return redirect(url_for("verinformacion.ver_ventas"))
@@ -118,9 +133,9 @@ def editar_remesa(id):
         return "Remesa no encontrado", 404
 
     if request.method == "POST":
-        remesa.id = request.form["id"]
-        remesa.Proveedor = request.form["Proveedor"]
-        remesa.CodigoElemento = request.form["CodigoElemento"]
+        remesa.Id_Remesa = request.form["Id_Remesa"]
+        remesa.Id_Proveedor = request.form["Id_Proveedor"]
+        remesa.Código_Prod = request.form["Código_Prod"]
         remesa.Modelo = request.form["Modelo"]
         remesa.Nombre = request.form["Nombre"]
         remesa.Num_Entradas = request.form["Num_Entradas"]

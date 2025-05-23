@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #28469c;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+h1 {
+    margin-top: 20px;
+    font-size: 48px;
+    font-weight: 300;
+}
+form {
+    padding: 20px;
+    border-radius: 10px;
+    width: 70%;
+    margin: auto;
+    text-align: center;
+}
+label {
+    display: block;
+    margin-left: 100px;  /* Mueve hacia la derecha */
+    font-size: 14px; /* Tamaño de la letra */
+    font-weight: 1000;
+    color: rgba(255, 255, 255, 0.8); /* Color tenue */
+    z-index: 1;/* Este elemento estará sobre el elemento de fondo */
+    position: absolute;
+    margin-top: -10px;
+    background-color: #28469c;
+    width: auto;
+    padding: 2px 7px;
+
+}
+.input-container {
+    position: relative;
+    width: 90%;
+    margin: auto;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  padding-right: 40px;  /* Espacio para el icono */
+  border: 2px solid white;
+  border-radius: 20px;
+  background: transparent;
+  color: white;
+  font-size: 16px;
+  outline: none;
+  text-align: left;
+  box-sizing: border-box;
+}
+input::placeholder {
+    color: #fff;
+}
+.tratamientoSelect-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+select{
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+    padding-right: 40px;  /* Espacio para el icono */
+    border: 2px solid white;
+    color: #fff;
+    background-color: #28469c;
+    border-radius: 20px;
+    font-size: 16px;
+    outline: none;
+    text-align: left;
+    appearance: none; /* importante para quitar estilo nativo en select */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.input-container i:not(.icon-trash) {
+    position: absolute;
+    right: 12px; /* Coloca el ícono a la derecha */
+    top: 50%;
+    transform: translateY(-50%);
+    color: white; /* Color del ícono */
+    font-size: 17px; /* Ajusta el tamaño del ícono */
+    height: 20px;
+    width: 20px;
+}
+.input-container i:not(.icon-trash)::after{
+    content: "";
+    position: absolute;
+    left: -10px;
+    width: 2px;
+    height: 20px;
+    background-color: #fff;
+
+}
+
+button:not(.btn-eliminarTratamiento){
+    display: flex;
+    align-items: center;
+    background-color: #5a9bd5;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    gap: 1px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+    margin: 20px auto 0;
+}
+  
+button:not(.btn-eliminarTratamiento)::before {
+  content: "\f0c7"; /* ícono de disquete FontAwesome */
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  background: white;
+  color: #5a9bd5;
+  border-radius: 50%;
+  padding: 7px; /* Aumenta el área interna del ícono */
+  font-size: 15px; /* Ajusta el tamaño del ícono */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: -6px; /* Margen para mantener la posición */
+  transform: scale(1.5); /* Agranda el ícono sin afectar el botón */
+  position: relative;
+  left: -18px; /* Desplázalo más hacia la izquierda */
+}
+  
+button:not(.btn-eliminarTratamiento):hover {
+  background-color: #407ec9; /* Cambia el color de fondo */
+  color: #fff; /* Cambia el color del texto */
+  transform: scale(1.1); /* Hace el botón un poco más grande */
+  transition: 0.3s; /* Suaviza la transición */
+}
+a button:not(.btn-eliminarTratamiento) {
+  display: flex;
+  align-items: center;
+  background-color: #5a9bd5;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  gap: 1px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  margin: 20px auto 0;
+}
+a button:not(.btn-eliminarTratamiento)::before {
+    content: "\f0e2"; /* ícono de disquete FontAwesome */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    background: white;
+    color: #5a9bd5;
+    border-radius: 50%;
+    padding: 7px; /* Aumenta el área interna del ícono */
+    font-size: 15px; /* Ajusta el tamaño del ícono */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: -6px; /* Margen para mantener la posición */
+    transform: scale(1.5); /* Agranda el ícono sin afectar el botón */
+    position: relative;
+    left: -18px; /* Desplázalo más hacia la izquierda */
+  }
+a button:hover {
+    background-color: #407ec9;
+}
+.botones-accion {
+  display: flex;
+  justify-content: center; /* centra horizontalmente */
+  gap: 30px; /* espacio entre botones */
+  margin-top: 30px;
+  flex-wrap: wrap; /* por si en pantallas pequeñas necesitan ajustarse */
+}
+
+.botones-accion button:not(.btn-eliminarTratamiento),
+.botones-accion a button:not(.btn-eliminarTratamiento) {
+  margin: 0; /* elimina el margin-top: 20px que ya tenías */
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* BUTTON ELIMINAR TRATAMIENTO */
+.btn-eliminarTratamiento {
+  position: relative;
+  background: none;
+  margin-left: 4px;
+  border: 2px solid #fff;
+  border-radius: 50px;
+  width: 30px;
+  height: 30px;
+  transition: .2s ease;
+}
+.btn-eliminarTratamiento:hover{
+  transform: scale(1.05);
+}
+.icon-trash{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.tratamiento-extra {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+.btn-agregarTratamiento:not(.btn-eliminarTratamiento)::before {
+  content: "\2b"; /* ícono de disquete FontAwesome */
+  font-family: "Font Awesome 6 Free";
+}
+
+/* INPUT DATE */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+input[type="date"] {
+  width: 200px;
+}
+.fechas-container {
+  display: flex;
+  margin-left: 200px;
+}
+.fecha-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.fecha-container label {
+  left: -50px;
+}

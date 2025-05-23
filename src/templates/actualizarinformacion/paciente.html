@@ -4,35 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Paciente</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/paciente.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/actualizarinformacion/paciente.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/all.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <main class="main-container">
-        <h1 class="page-title">Editar Paciente</h1>
+    <h1>Editar Paciente</h1>
 
-        <form method="POST">
-            <label for="Nombre_Pa">Nombre:</label>
-            <input type="text" name="Nombre_Pa" value="{{ paciente.Nombre_Pa }}" required><br>
+    <form method="POST">
+        <label for="Nombre_Pa">Nombre:</label>
+        <div class="input-container">
+            <input type="text" name="Nombre_Pa" value="{{ paciente.Nombre_Pa }}" required>
+            <i class="fa-solid fa-user"></i>
+        </div><br>
 
-            <label for="Apellidos">Apellidos:</label>
-            <input type="text" name="Apellidos" value="{{ paciente.Apellidos }}" required><br>
+        <label for="Apellidos">Apellidos:</label>
+        <div class="input-container">
+            <input type="text" name="Apellidos" value="{{ paciente.Apellidos }}" required>
+            <i class="fa-solid fa-user-group"></i>
+        </div><br>
 
-            <label for="Teléfono1">Teléfono 1:</label>
-            <input type="text" name="Teléfono1" value="{{ paciente.Teléfono1 }}" required><br>
+        <label for="Teléfono1">Teléfono 1:</label>
+        <div class="input-container">
+            <input type="text" name="Teléfono1" value="{{ paciente.Teléfono1 }}" required>
+            <i class="fa-solid fa-phone"></i>
+        </div><br>
 
-            <label for="Teléfono2">Teléfono 2:</label>
-            <input type="text" name="Teléfono2" value="{{ paciente.Teléfono2 }}"><br>
+        <label for="Teléfono2">Teléfono 2:</label>
+        <div class="input-container">
+            <input type="text" name="Teléfono2" value="{{ paciente.Teléfono2 }}">
+            <i class="fa-solid fa-phone-volume"></i>
+        </div><br>
 
-            <label for="Dirección">Dirección:</label>
-            <input type="text" name="Dirección" value="{{ paciente.Dirección }}" required><br>
+        <label for="Dirección">Dirección:</label>
+        <div class="input-container">
+            <input type="text" name="Dirección" value="{{ paciente.Dirección }}" required>
+            <i class="fa-solid fa-location-dot"></i>
+        </div><br>
 
-            <label for="Correo">Correo:</label>
-            <input type="email" name="Correo" value="{{ paciente.Correo }}" required><br>
+        <label for="Correo">Correo:</label>
+        <div class="input-container">
+            <input type="email" name="Correo" value="{{ paciente.Correo }}" required>
+            <i class="fa-solid fa-envelope"></i>
+        </div><br>
 
-            <button type="submit">Guardar Cambios</button>
-        </form>
-
-        <a href="{{ url_for('verinformacion.ver_pacientes') }}">Regresar a la lista de pacientes</a>
-    </main>
+        <div class="botones-accion">
+            <button type="submit">Guardar</button>
+            <a href="{{ url_for('verinformacion.ver_pacientes') }}">
+                <button type="button">Regresar</button>
+            </a>
+        </div>
+    </form>
 </body>
 </html>

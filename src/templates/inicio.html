@@ -3,30 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Bienvenido</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='resources/logo.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/inicio/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/all.min.css') }}">
+    <script src="https://kit.fontawesome.com/7f87e90d60.js" crossorigin="anonymous"></script>
 </head>
-<body>
-    <nav>
-        <ul>
-           <a href=""></a>
-        </ul>
-    </nav>
-    <img src="" alt="Imagne de la empresa">
-    <br>
-    <a href="{{ url_for('verinformacion.ver_proveedores') }}"> Proveedores</a>
-    <br>
-    <a href="{{ url_for('verinformacion.ver_remesas') }}"> remesas</a>
-    <br>
-    <a href="{{ url_for('verinformacion.ver_ventas') }}"> ventas</a>
-    <br>
-    <a href="{{ url_for('verinformacion.ver_pacientes') }}"> pacientes</a>
-    <br>
-    <a href="{{ url_for('verinformacion.ver_inventarios') }}"> inventarios</a>
-    <br>
-    <a href="{{ url_for('verinformacion.ver_pagos') }}"> Pagos</a>
-    <br>
+<body style="display: flex; height: 100vh;">
 
-   <a href="{{ url_for('auth.login') }}"><button>Cerrar Sesion</button></a>
-    <h1>¡Bienvenido {{ session['usuario'] }}!</h1>
-    <p>Estás dentro del sistema.</p>
+    <!-- NAVBAR -->
+    <nav id="fullscreen-menu" class="navbar navbar-hidden">
+        <div class="nav-logo">
+            <span class="fondo-img-logo">
+                <img src="{{ url_for('static', filename='resources/logo.png') }}" class="nav-img-logo" alt="Logo">
+            </span>
+            <span class="nav-titulo">
+                <h2 class="nav-titulo1">Óptica</h2>
+                <h2 class="nav-titulo2">Sima</h2>
+            </span>
+        </div>
+
+        <ul class="nav-buttons">
+            <li class="nav-btn btn-proveedores"><a href="{{ url_for('verinformacion.ver_proveedores') }}"><i class="fa-solid fa-truck"></i><span class="nav-btn-texto">Proveedores</span></a></li>
+            <li class="nav-btn btn-remesas"><a href="{{ url_for('verinformacion.ver_remesas') }}"><i class="fa-solid fa-coins"></i><span class="nav-btn-texto">Remesas</span></a></li>
+            <li class="nav-btn btn-ventas"><a href="{{ url_for('verinformacion.ver_ventas') }}"><i class="fa-solid fa-money-bill-wave"></i><span class="nav-btn-texto">Ventas</span></a></li>
+            <li class="nav-btn btn-pacientes"><a href="{{ url_for('verinformacion.ver_pacientes') }}"><i class="fa-solid fa-users"></i><span class="nav-btn-texto">Pacientes</span></a></li>
+            <li class="nav-btn btn-inventario"><a href="{{ url_for('verinformacion.ver_inventarios') }}"><i class="fa-solid fa-boxes-stacked"></i><span class="nav-btn-texto">Inventario</span></a></li>
+            <li class="nav-btn btn-pagos"><a href="{{ url_for('verinformacion.ver_pagos') }}"><i class="fa-solid fa-cash-register"></i><span class="nav-btn-texto">Pagos</span></a></li>
+        </ul>
+
+        <a href="{{ url_for('auth.login') }}">
+            <button class="btn-cerrarSesion"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </a>
+    </nav>
+
+    <!-- CONTENIDO -->
+    <main style="padding: 40px; font-family: 'Poppins'; width: 100%;">
+        <h1 style="color: #28469C;">¡Bienvenido {{ session['usuario'] }}!</h1>
+        <p style="font-size: 18px;">Estás dentro del sistema.</p>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
 </body>
 </html>

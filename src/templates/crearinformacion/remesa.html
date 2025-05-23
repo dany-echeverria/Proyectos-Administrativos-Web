@@ -2,91 +2,128 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Remesa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/crearinformacion/remesa.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/all.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <script>
-        function filtrarProveedores() {
-
-            let inputproveedor = document.getElementById("buscar_proveedor").value.toLowerCase();
-            let opcionesProveedor = document.getElementById("Id_Proveedor").options;
-            let inputproducto = document.getElementById("buscar_producto").value.toLowerCase();
-            let opcionesProducto = document.getElementById("Id_Producto").options;
-
-
-            // Filtrar las opciones de Id de Proveedor
-            for (let i = 0; i < opcionesProveedor.length; i++) {
-                let textoProveedor = opcionesProveedor[i].text.toLowerCase();
-                opcionesProveedor[i].style.display = textoProveedor.includes(inputproveedor) ? "" : "none";
-            }
-
-            for (let i = 0; i < opcionesProducto.length; i++) {
-                let textoProveedor = opcionesProducto[i].text.toLowerCase();
-                opcionesProducto[i].style.display = textoProveedor.includes(inputproducto) ? "" : "none";
-            }
-        }
-        
-    </script>
-    <h2>Ingresar Nueva Remesa</h2>
-
-    
+<main class="main-container">
+    <h1 class="page-title">Agregar Nueva Remesa</h1>
 
     <form method="POST">
 
-        
-
-        <input type="text" id="buscar_proveedor" onkeyup="filtrarProveedores()" placeholder="Escriba para buscar...">
-
-        <label>ID Proveedor:</label>
-        <select name="Id_Proveedor" id="Id_Proveedor" required>
-            <option value="" disabled selected>Seleccione un proveedor</option>
-            {% for proveedor in proveedores %}
-                <option value="{{ proveedor.Id_Proveedor }}">
-                    {{ proveedor.Id_Proveedor }} - {{ proveedor.Nombre_Prov }}
-                </option>
-            {% endfor %}
-        </select>
+        <!-- Buscar proveedor -->
+        <label for="buscar_proveedor">Buscar Proveedor:</label>
+        <div class="input-container">
+            <input type="text" id="buscar_proveedor" onkeyup="filtrarProveedores()" placeholder="Buscar por nombre o ID">
+            <i class="fa-solid fa-search"></i>
+        </div>
+        <br>
+ 
+        <!-- Select proveedor -->
+        <label for="Id_Proveedor">ID Proveedor:</label>
+        <div class="input-container">
+            <select name="Id_Proveedor" id="Id_Proveedor" required>
+                <option value="" disabled selected>Seleccione un proveedor</option>
+                {% for proveedor in proveedores %}
+                    <option value="{{ proveedor.Id_Proveedor }}">
+                        {{ proveedor.Id_Proveedor }} - {{ proveedor.Nombre_Prov }}
+                    </option>
+                {% endfor %}
+            </select>
+            <i class="fa-solid fa-truck"></i>
+        </div>
         <br>
 
+        <!-- Buscar producto -->
+        <label for="buscar_producto">Buscar Producto:</label>
+        <div class="input-container">
+            <input type="text" id="buscar_producto" onkeyup="filtrarProveedores()" placeholder="Buscar por código">
+            <i class="fa-solid fa-search"></i>
+        </div>
+        <br>
 
-
-
-        <input type="text" id="buscar_producto" onkeyup="filtrarProducto()" placeholder="Escriba para buscar...">
-
-        <label>Nombre del producto:</label>
-        <select name="Id_Producto" id="Id_Producto" required>
+        <!-- Select producto -->
+        <label  for="Id_Proveedor">Nombre del producto:</label>
+        <div class="input-container">
+        <select name="Id_Producto" id="CodigoProducto" required>
             <option value="" disabled selected>Selecciona la clave del producto</option>
             {% for producto in inventarios %}
                 <option value="{{ producto.Código_Prod }}">
-                    {{ producto.Código_Prod }}
+                    {{ producto.Código_Prod }} - {{ producto.Nombre_Prod }}
                 </option>
             {% endfor %}
         </select>
+        <i class="fa-solid fa-truck"></i>
+        </div>
+
         <br>
 
+        <!-- Campos adicionales -->
+        <label for="modelo">Modelo:</label>
+        <div class="input-container">
+            <input type="text" name="modelo" required placeholder="Ingrese el modelo">
+            <i class="fa-solid fa-cube"></i>
+        </div>
+        <br>
 
+        <label for="nombre">Nombre:</label>
+        <div class="input-container">
+            <input type="text" name="nombre" required placeholder="Ingrese el Nombre del Cliente">
+            <i class="fa-solid fa-tag"></i>
+        </div>
+        <br>
 
+        <label for="num_entradas">Número de Entradas:</label>
+        <div class="input-container">
+            <input type="number" name="num_entradas" required placeholder="Ingrese el numero de Entradas">
+            <i class="fa-solid fa-sort-numeric-up"></i>
+        </div>
+        <br>
 
-        <label>Modelo:</label>
-        <input type="text" name="modelo" required><br>
+        <label for="factura">Factura:</label>
+        <div class="input-container">
+            <input type="text" name="factura" required placeholder="Ingrese el precio de factura">
+            <i class="fa-solid fa-file-invoice"></i>
+        </div>
+        <br>
 
-        <label>Nombre:</label>
-        <input type="text" name="nombre" required><br>
+        <label for="fecha">Fecha:</label>
+        <div class="input-container">
+            <input type="date" name="fecha" required class="input-dateTime">
+        </div>
+        <br>
 
-        <label>Número de Entradas:</label>
-        <input type="number" name="num_entradas" required><br>
-
-        <label>Factura:</label>
-        <input type="text" name="factura" required><br>
-
-        <label>Fecha:</label>
-        <input type="date" name="fecha" required><br>
-
-        <button type="submit">Guardar</button>
+        <!-- Botones -->
+        <div class="botones-accion">
+            <button type="submit">Guardar</button>
+            <a href="{{ url_for('verinformacion.ver_remesas') }}">
+                <button type="button">Regresar</button>
+            </a>
+        </div>
     </form>
+</main>
 
-    <br>
-    <a href="{{ url_for('verinformacion.ver_remesas') }}">Regresar</a>
+<script>
+    function filtrarProveedores() {
+        let inputProveedor = document.getElementById("buscar_proveedor").value.toLowerCase();
+        let opcionesProveedor = document.getElementById("Id_Proveedor").options;
+
+        for (let i = 0; i < opcionesProveedor.length; i++) {
+            let texto = opcionesProveedor[i].text.toLowerCase();
+            opcionesProveedor[i].style.display = texto.includes(inputProveedor) ? "" : "none";
+        }
+
+        let inputProducto = document.getElementById("buscar_producto").value.toLowerCase();
+        let opcionesProducto = document.getElementById("Id_Producto").options;
+
+        for (let i = 0; i < opcionesProducto.length; i++) {
+            let texto = opcionesProducto[i].text.toLowerCase();
+            opcionesProducto[i].style.display = texto.includes(inputProducto) ? "" : "none";
+        }
+    }
+</script>
 </body>
 </html>
