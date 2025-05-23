@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from db import db
+from src.db import db
 from models import Remesa, Inventario, Proveedores, Ventas, Pagos, Paciente
 
 # Definir el Blueprint para agregar información
