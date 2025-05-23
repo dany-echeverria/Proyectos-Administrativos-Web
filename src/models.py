@@ -1,4 +1,4 @@
-from db import db
+from src.db import db
 
 # Modelo de Inventario
 # Clase Remesa
