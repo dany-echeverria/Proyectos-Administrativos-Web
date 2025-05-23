@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
-from db import db
-from models import Proveedores, Inventario, Paciente, Remesa, Pagos, Ventas
+from src.db import db
+from src.models import Proveedores, Inventario, Paciente, Remesa, Pagos, Ventas
 
 eliminar_bp = Blueprint('eliminar', __name__)
 

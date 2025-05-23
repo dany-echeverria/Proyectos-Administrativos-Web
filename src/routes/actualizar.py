@@ -1,7 +1,7 @@
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 
-from models import db, Inventario, Paciente, Pagos, Proveedores, Ventas, Remesa
+from src.models import db, Inventario, Paciente, Pagos, Proveedores, Ventas, Remesa
 
 actualizar_bp = Blueprint("actualizar", __name__)
 

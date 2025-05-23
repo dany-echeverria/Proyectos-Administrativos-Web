@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from src.db import db
-from models import Remesa, Inventario, Proveedores, Ventas, Pagos, Paciente
+from src.models import Remesa, Inventario, Proveedores, Ventas, Pagos, Paciente
 
 # Definir el Blueprint para agregar información
 create_bp = Blueprint('create', __name__, url_prefix='/crear')

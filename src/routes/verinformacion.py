@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request
-from models import Remesa, Inventario, Proveedores, Ventas, Paciente, Pagos
+from src.models import Remesa, Inventario, Proveedores, Ventas, Paciente, Pagos
 from sqlalchemy.orm import joinedload
 
 
