@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, session, redirect, url_for
 from src.config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS
-from db import db
+from src.db import db
 from routes.create import create_bp
 from routes.verinformacion import verinformacion_bp
 from routes.auth import auth_bp

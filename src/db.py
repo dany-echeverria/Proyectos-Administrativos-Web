@@ -1,4 +1,4 @@
-# Archivo para inicializar la base de datos con MySQL
+# src/db.py
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
